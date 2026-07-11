@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnalisEJA - Reprovados e Ausência de Notas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    :root {
+      --bg: #eef3f8;
+      --card: #fff;
+      --text: #0b1b33;
+      --muted: #64748b;
+      --line: #dbe3ee;
+      --red: #dc2626;
+      --amber: #d97706;
+      --green: #16a34a;
+      --blue: #2563eb;
+      --purple: #7e22ce;
+      --gray: #64748b
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text)
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f2f66, #1f6feb);
+      color: white;
+      padding: 24px 16px;
+      text-align: center
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px
+    }
+
+    header p {
+      margin: 7px 0 0;
+      opacity: .95
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 22px auto;
+      padding: 0 12px
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 22px rgba(15, 47, 102, .08)
+    }
+
+    .upload {
+      border: 2px dashed #9fb3c8;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      background: #f8fbff
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      align-items: center
+    }
+
+    .controls input,
+    .controls select {
+      padding: 7px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: white
+    }
+
+    .controls input {
+      width: 86px
+    }
+
+    .controls select {
+      min-width: 170px
+    }
+
+    .filtrosSimples {
+      gap: 36px
+    }
+
+    .filtrosSimples label {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    button {
+      margin-top: 22px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-weight: bold;
+      cursor: pointer
+    }
+
+    button:hover {
+      filter: brightness(.95)
+    }
+
+    .status {
+      margin-top: 12px;
+      color: var(--muted)
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .hidden {
+      display: none
+    }
+
+    .turmaTitulo {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 0 0 12px;
+      color: #0f2f66
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fbfdff
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-weight: bold
+    }
+
+    .metric b {
+      font-size: 30px;
+      display: block;
+      margin-top: 6px
+    }
+
+    .metric.purple {
+      border-color: #e9d5ff;
+      background: #faf5ff
+    }
+
+    .metric.purple b {
+      color: var(--purple)
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top
+    }
+
+    th {
+      background: #f5f7fb
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-weight: bold;
+      font-size: 12px
+    }
+
+    .risco {
+      background: #fee2e2;
+      color: #b91c1c
+    }
+
+    .atencao {
+      background: #fef3c7;
+      color: #92400e
+    }
+
+    .ok {
+      background: #dcfce7;
+      color: #166534
+    }
+
+    .admin {
+      background: #e2e8f0;
+      color: #334155
+    }
+
+    .acima {
+      background: #f3e8ff;
+      color: #6b21a8
+    }
+
+    .disciplinas {
+      white-space: pre-line
+    }
+
+    .aviso {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 12px
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 18px
+    }
+
+    .btnPdf {
+      background: #16a34a
+    }
+
+    .exportBox {
+      border: 2px solid #bbf7d0;
+      background: #f0fdf4
+    }
+
+    .destaque {
+      background: #fffbeb;
+      border-left: 6px solid #d97706
+    }
+
+    .sectionTag {
+      display: inline-block;
+      background: #92400e;
+      color: white;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 8px
+    }
+
+    .faltandoBox {
+      border: 1px solid #fed7aa;
+      background: #fff7ed;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 12px
+    }
+
+    .pedagogico {
+      background: #fffbeb;
+      border-left: 6px solid #d97706
+    }
+
+    .pedagogico h2 {
+      margin-top: 4px;
+      color: #92400e
+    }
+
+    .pedagogico .pedGrid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 14px 0
+    }
+
+    .pedagogico .pedMetric {
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      background: #f8fafc;
+      padding: 14px
+    }
+
+    .pedagogico .pedMetric span {
+      display: block;
+      color: #64748b;
+      font-weight: bold;
+      font-size: 14px
+    }
+
+    .pedagogico .pedMetric b {
+      display: block;
+      font-size: 26px;
+      margin-top: 4px
+    }
+
+    .evasaoBox {
+      border: 1px solid #f87171;
+      background: #fee2e2;
+      border-radius: 12px;
+      padding: 12px;
+      margin: 14px 0;
+      color: #7f1d1d
+    }
+
+    .evasaoBox h3 {
+      margin: 0 0 8px;
+      color: #991b1b
+    }
+
+    .pedagogico table th {
+      background: #f1f5f9
+    }
+
+    .pedagogico .sectionSub {
+      font-weight: bold;
+      margin: 12px 0 8px
+    }
+
+    .mutedLine {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 2px
+    }
+
+    @media(max-width:850px) {
+      .pedagogico .pedGrid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .calendarGrid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr);
+      gap: 16px;
+      margin-top: 14px;
+      align-items: start
+    }
+
+    .calendarCard {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fbfdff
+    }
+
+    .calendarCard h3 {
+      margin: 0;
+      padding: 14px 16px;
+      background: #e8f3df;
+      color: #0f2f66
+    }
+
+    .calendarPreview {
+      height: 430px;
+      background: #f8fafc;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line)
+    }
+
+    .calendarPreview iframe {
+      width: 100%;
+      height: 100%;
+      border: 0
+    }
+
+    .calendarActions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 14px 16px
+    }
+
+    .calendarActions a {
+      display: inline-block;
+      text-decoration: none;
+      background: #2563eb;
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: bold
+    }
+
+    .calendarActions a.secondary {
+      background: #16a34a
+    }
+
+    .calendarNote {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 8px 0 0
+    }
+
+    .monthZoom {
+      padding: 16px
+    }
+
+    .monthZoom .monthTitle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px
+    }
+
+    .monthZoom .monthTitle h4 {
+      margin: 0;
+      font-size: 22px;
+      color: #0f2f66
+    }
+
+    .monthZoom .tagAtual {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: bold;
+      font-size: 12px
+    }
+
+    .monthZoom table {
+      font-size: 14px
+    }
+
+    .monthZoom th {
+      background: #e8f3df;
+      text-align: center
+    }
+
+    .monthZoom td:first-child {
+      width: 80px;
+      text-align: center;
+      font-weight: bold
+    }
+
+    .monthZoom td {
+      padding: 8px
+    }
+
+    .monthZoom .dateBadge {
+      display: inline-block;
+      min-width: 58px;
+      border: 1px solid #99b989;
+      border-radius: 8px;
+      padding: 4px 6px;
+      background: #f7fff0
+    }
+
+    .monthZoom .alertLine {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 12px;
+      color: #92400e
+    }
+
+    .filterBar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 12px 0
+    }
+
+    .filterBar button {
+      margin: 0;
+      padding: 8px 12px;
+      background: #e2e8f0;
+      color: #0f172a
+    }
+
+    .filterBar button.active {
+      background: #2563eb;
+      color: white
+    }
+
+    .calendarLeftStack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    .diretrizesCard h3 {
+      background: #ecfeff;
+      color: #075985
+    }
+
+    .diretrizesPreview {
+      height: 360px;
+      background: #f8fafc;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line)
+    }
+
+    .diretrizesPreview iframe {
+      width: 100%;
+      height: 100%;
+      border: 0
+    }
+
+    .diretrizesInfo {
+      padding: 12px 16px;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .diretrizesActions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 14px 16px
+    }
+
+    .diretrizesActions a {
+      display: inline-block;
+      text-decoration: none;
+      background: #0f766e;
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: bold
+    }
+
+    .diretrizesActions a.secondary {
+      background: #16a34a
+    }
+
+    .julhoPainel {
+      background: linear-gradient(180deg, #ffffff, #f8fbff)
+    }
+
+    .julhoHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px
+    }
+
+    .julhoHeader h4 {
+      margin: 0;
+      font-size: 24px;
+      color: #0f2f66;
+      line-height: 1.1
+    }
+
+    .julhoHeader p {
+      margin: 4px 0 0;
+      color: #64748b;
+      font-size: 13px
+    }
+
+    .tagAtual {
+      background: #dc2626 !important;
+      color: #fff !important;
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-weight: bold;
+      font-size: 12px;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, .18)
+    }
+
+    .julhoEventos {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .eventoJulho {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid #dbe3ee;
+      border-radius: 14px;
+      background: #fff;
+      padding: 10px;
+      box-shadow: 0 4px 12px rgba(15, 47, 102, .05)
+    }
+
+    .eventoJulho .data {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 12px;
+      background: #e8f3df;
+      color: #0f2f66;
+      font-weight: 800;
+      text-align: center;
+      font-size: 14px;
+      border: 1px solid #c8ddb8
+    }
+
+    .eventoJulho .info strong {
+      display: block;
+      color: #0f2f66;
+      margin-bottom: 2px
+    }
+
+    .eventoJulho .info span {
+      display: block;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.25
+    }
+
+    .eventoJulho.alerta {
+      border-color: #fed7aa;
+      background: #fffaf3
+    }
+
+    .eventoJulho.alerta .data {
+      background: #fff7ed;
+      color: #92400e;
+      border-color: #fed7aa
+    }
+
+    .eventoJulho.ferias {
+      border-color: #bbf7d0;
+      background: #f0fdf4
+    }
+
+    .eventoJulho.ferias .data {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #bbf7d0
+    }
+
+    .eventoJulho.final {
+      border-color: #bfdbfe;
+      background: #eff6ff
+    }
+
+    .eventoJulho.final .data {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-color: #bfdbfe
+    }
+
+    .julhoResumo {
+      margin-top: 12px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      color: #1e3a8a;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.35
+    }
+
+    @media(max-width:520px) {
+      .eventoJulho {
+        grid-template-columns: 1fr
+      }
+
+      .eventoJulho .data {
+        justify-content: flex-start;
+        padding-left: 12px
+      }
+    }
+
+    @media(max-width:850px) {
+      .grid {
+        grid-template-columns: 1fr
+      }
+
+      .card {
+        padding: 14px
+      }
+
+      table {
+        font-size: 13px
+      }
+
+      .calendarGrid {
+        grid-template-columns: 1fr
+      }
+
+      .calendarPreview {
+        height: 300px
+      }
+
+      th,
+      td {
+        padding: 8px
+      }
+
+      .filterBar {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        padding: 8px;
+        border-radius: 12px;
+        z-index: 2
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff
+      }
+
+      header,
+      .upload,
+      #btnPdf,
+      .actions,
+      #calendariosIniciais,
+      .filterBar {
+        display: none !important
+      }
+
+      main {
+        max-width: 100%;
+        margin: 0;
+        padding: 0
+      }
+
+      .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid
+      }
+
+      table {
+        font-size: 11px
+      }
+
+      th,
+      td {
+        padding: 6px
+      }
+
+      .hidden {
+        display: block !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="vercelAviso" style="display:none;background:#fee2e2;color:#991b1b;padding:12px 16px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-weight:bold;">Erro ao carregar bibliotecas externas. Verifique a conexão e tente atualizar a página.</div>
+
+  <header>
+    <h1>AnalisEJA - Reprovados e Ausência de Notas</h1>
+    <p><strong>Foco:</strong> identificar estudantes reprovados e estudantes com ausência de notas nos componentes curriculares.</p>
+    <p>Identifica automaticamente Etapa, Módulo e Alfabetiza.</p>
+  </header>
+  <main>
+    <section class="card" id="calendariosIniciais">
+      <h2>Calendário Pedagógico EJA 2026</h2>
+      <p class="calendarNote">Use este calendário único como referência da análise. Para aparecer abaixo na Vercel, envie este arquivo <strong>index.html</strong> e o PDF na mesma pasta, com o nome exatamente: <strong>calendario-eja.pdf</strong>.</p>
+      <div class="calendarGrid">
+        <div class="calendarLeftStack">
+          <div class="calendarCard">
+            <h3>Calendário completo</h3>
+            <div class="calendarPreview"><iframe src="calendario-eja.pdf#page=1" title="Calendário Pedagógico EJA 2026">Seu navegador não conseguiu exibir o PDF. Use o botão Abrir calendário.</iframe></div>
+            <div class="calendarActions">
+              <a href="calendario-eja.pdf" target="_blank" rel="noopener">Abrir calendário</a>
+              <a class="secondary" href="calendario-eja.pdf" download>Baixar PDF</a>
+            </div>
+          </div>
+
+          <div class="calendarCard diretrizesCard">
+            <h3>Diretrizes Pedagógicas da EJA</h3>
+            <div class="diretrizesInfo">Visualize aqui o documento <strong>diretrizes-eja.pdf</strong>. Para aparecer na Vercel, mantenha este PDF na mesma pasta do <strong>index.html</strong>.</div>
+            <div class="diretrizesPreview"><iframe src="diretrizes-eja.pdf#page=1" title="Diretrizes Pedagógicas da EJA">Seu navegador não conseguiu exibir o PDF. Use o botão Abrir Diretrizes.</iframe></div>
+            <div class="diretrizesActions">
+              <a href="diretrizes-eja.pdf" target="_blank" rel="noopener">Abrir Diretrizes</a>
+              <a class="secondary" href="diretrizes-eja.pdf" download>Baixar PDF</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="calendarCard monthZoom julhoPainel">
+          <div class="julhoHeader">
+            <div>
+              <h4>Julho em destaque</h4>
+              <p>Foco do calendário pedagógico EJA 2026</p>
+            </div>
+            <span class="tagAtual">MÊS ATUAL</span>
+          </div>
+
+          <div class="julioEventos julhoEventos">
+            <div class="eventoJulho alerta">
+              <div class="data">01 a 07</div>
+              <div class="info"><strong>N2 - 2ª Avaliação mensal do 2º Bimestre</strong><span>Período de aplicação da avaliação.</span></div>
+            </div>
+            <div class="eventoJulho alerta">
+              <div class="data">01 a 07</div>
+              <div class="info"><strong>Inserção mensal da nota no iSeduc</strong><span>Lançamento das notas no sistema.</span></div>
+            </div>
+            <div class="eventoJulho final">
+              <div class="data">07</div>
+              <div class="info"><strong>2º Conselho de Classe</strong><span>Final do 1º semestre letivo.</span></div>
+            </div>
+            <div class="eventoJulho alerta">
+              <div class="data">08 e 09</div>
+              <div class="info"><strong>Recuperação semestral</strong><span>Período destinado à recuperação.</span></div>
+            </div>
+            <div class="eventoJulho">
+              <div class="data">04</div>
+              <div class="info"><strong>Sábado letivo</strong><span>Dia letivo previsto no calendário.</span></div>
+            </div>
+            <div class="eventoJulho final">
+              <div class="data">10</div>
+              <div class="info"><strong>Prova final da EJA Modular</strong><span>Fechamento avaliativo da modalidade modular.</span></div>
+            </div>
+            <div class="eventoJulho ferias">
+              <div class="data">13 a 27</div>
+              <div class="info"><strong>Férias escolares</strong><span>Recesso escolar previsto no calendário.</span></div>
+            </div>
+            <div class="eventoJulho final">
+              <div class="data">30</div>
+              <div class="info"><strong>Início do 1º Bimestre da EJA Modular e 3º Bimestre</strong><span>Retomada das atividades letivas.</span></div>
+            </div>
+          </div>
+
+          <div class="julhoResumo"><strong>Resumo:</strong> julho concentra a N2, a inserção das notas no iSeduc, o Conselho de Classe, a recuperação semestral, a prova final da EJA Modular, as férias escolares e o início do novo período letivo.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card upload">
+      <h2>Anexar boletim EJA em PDF</h2>
+      <input id="pdfFile" type="file" accept="application/pdf">
+      <input id="filtro" type="hidden" value="TODOS">
+      <input id="mediaMinima" type="hidden" value="6">
+      <input id="limiteFaltas" type="hidden" value="10">
+      <button id="btnAnalisar">Analisar boletim</button>
+      <div id="status" class="status"></div>
+      <p class="small"><strong>Critério principal:</strong> o relatório destaca estudantes com resultado final <strong>RE — Reprovado</strong>, componentes com campos obrigatórios de nota em branco e estudantes que apresentam somente notas zero. Situações administrativas como desistência, cancelamento e transferência são separadas e não entram como ausência de nota.</p>
+    </section>
+
+    <section id="results" class="hidden">
+      <div id="reportArea">
+        <section class="card">
+          <h1 style="margin-top:0">AnalisEJA — Reprovados e Ausência de Notas</h1>
+          <p><strong>Foco:</strong> estudantes reprovados, com notas obrigatórias ausentes ou somente com notas zero.</p>
+          <div id="turmaTitulo" class="turmaTitulo">TURMA:</div>
+          <div id="tipoTitulo" class="small">Tipo:</div>
+        </section>
+
+        <section class="card destaque">
+          <div class="sectionTag">PRIORIDADE</div>
+          <h2>Estudantes que exigem conferência</h2>
+          <p>Relação consolidada de reprovados e estudantes com ausência total ou parcial de notas.</p>
+          <div id="listaPrioridade" class="faltandoBox"></div>
+        </section>
+
+        <section class="card">
+          <h2>Resumo geral da turma</h2>
+          <div class="grid">
+            <div class="metric"><span>Total no boletim</span><b id="totalAlunos">0</b></div>
+            <div class="metric"><span>Estudantes ativos</span><b id="totalAtivos">0</b></div>
+            <div class="metric"><span>Reprovados</span><b id="totalReprovados">0</b></div>
+            <div class="metric"><span>Com ausência de nota</span><b id="totalAusencias">0</b></div>
+            <div class="metric"><span>Somente notas zero</span><b id="totalZeros">0</b></div>
+            <div class="metric"><span>Sem pendências</span><b id="totalRegulares">0</b></div>
+            <div class="metric"><span>Situação administrativa</span><b id="totalAdministrativos">0</b></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Detalhamento por estudante</h2>
+          <table>
+            <thead><tr><th>Estudante</th><th>Condição</th><th>Componentes reprovados</th><th>Ausências de notas</th><th>Notas zero</th><th>Observação</th></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </section>
+      </div>
+      <section class="card exportBox">
+        <h2>Baixar relatório final</h2>
+        <p>Baixe em PDF o resumo e o detalhamento dos estudantes reprovados, com ausência de notas ou somente com notas zero.</p>
+        <div class="actions"><button id="btnPdf" class="btnPdf" type="button">Baixar dados gerados em PDF</button></div>
+      </section>
+    </section>
+  </main>
+  <script>
+    if (typeof pdfjsLib === "undefined") { const aviso = document.getElementById("vercelAviso"); if (aviso) aviso.style.display = "block"; }
+    else pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const $ = id => document.getElementById(id);
+    let dadosGerados = [];
+    let alunosIgnorados = [];
+    let alunosSemNotaValida = [];
+    let filtroAtual = 'TODOS';
+    const ADMIN_CODES = ['TT', 'CA', 'N/D', 'DE', 'TR', 'TO', 'DU', 'CANCELADO', 'TRANSFERIDO'];
+    const clean = s => String(s || '').replace(/\s+/g, ' ').trim();
+    const norm = s => clean(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+    const isNum = s => /^\d+(?:[.,]\d+)?$/.test(String(s).trim());
+    const toNum = s => Number(String(s).replace(',', '.'));
+    function makeItems(textContent) { return textContent.items.map(i => ({ str: clean(i.str), x: i.transform[4], y: i.transform[5] })).filter(i => i.str) }
+    function sameLine(items, y, tol = 4) { return items.filter(i => Math.abs(i.y - y) <= tol).sort((a, b) => a.x - b.x) }
+    function textBetweenOnLine(items, labelText, stopTexts) { const label = items.find(i => norm(i.str).startsWith(labelText)); if (!label) return ''; const line = sameLine(items, label.y, 4); let stopX = Infinity; for (const st of stopTexts) { const stop = line.find(i => i.x > label.x && norm(i.str).startsWith(st)); if (stop) stopX = Math.min(stopX, stop.x) } return clean(line.filter(i => i.x > label.x + 30 && i.x < stopX - 2).map(i => i.str).join(' ')) }
+    function fallbackHeader(fullText, field, stop) { const re = new RegExp(field + '\\s*:?\\s*([\\s\\S]*?)\\s*' + stop, 'i'); const m = fullText.match(re); return m ? clean(m[1]) : '' }
+    function getHeader(items, fullText) {
+      let aluno = textBetweenOnLine(items, 'ESTUDANTE', ['TIPO', 'CURSO', 'MODULO', 'MÓDULO', 'TURMA', 'RA']);
+      let turma = textBetweenOnLine(items, 'TURMA', ['TURNO']);
+      let serie = textBetweenOnLine(items, 'ANO/SERIE', ['ANO']);
+      let modulo = textBetweenOnLine(items, 'MODULO', ['TURMA']);
+      if (!modulo) modulo = textBetweenOnLine(items, 'MÓDULO', ['TURMA']);
+      if (!aluno) aluno = fallbackHeader(fullText, 'ESTUDANTE', '(?:TIPO DE ENSINO|CURSO|MÓDULO|MODULO|TURMA|RA)');
+      if (!turma) turma = fallbackHeader(fullText, 'TURMA', 'TURNO');
+      if (!serie) serie = fallbackHeader(fullText, 'ANO/SÉRIE', 'ANO LETIVO');
+      aluno = aluno.replace(/^[:\s]+|[:\s]+$/g, '');
+      turma = turma.replace(/^[:\s]+|[:\s]+$/g, '');
+      serie = serie.replace(/^[:\s]+|[:\s]+$/g, '');
+      modulo = modulo.replace(/^[:\s]+|[:\s]+$/g, '');
+      const ns = norm(serie + ' ' + modulo + ' ' + turma + ' ' + fullText);
+      let tipo = 'EJA';
+      if (ns.includes('ALFABETIZA')) tipo = 'ALFABETIZA';
+      else if (ns.includes('MODULO')) tipo = 'MÓDULO';
+      else if (ns.includes('ETAPA')) tipo = 'ETAPA';
+      return { aluno: aluno || 'Aluno sem nome identificado', turma: turma || 'Turma não identificada', serie: serie || modulo || '', tipo }
+    }
+    function valueIn(rowItems, xmin, xmax) { const cand = rowItems.filter(i => i.x >= xmin && i.x <= xmax && isNum(i.str)).sort((a, b) => a.x - b.x); return cand.length ? toNum(cand[cand.length - 1].str) : null }
+    function statusIn(rowItems) {
+      const maxX = Math.max(...rowItems.map(i => i.x), 0);
+      const minStatusX = Math.max(0, maxX - 120);
+      const cand = rowItems.filter(i => i.x >= minStatusX && /^[A-Z/]{2,10}$/.test(norm(i.str))).sort((a, b) => a.x - b.x).map(i => norm(i.str));
+      return cand.find(c => ADMIN_CODES.includes(c) || c === 'CUR' || c === 'AP' || c === 'RE' || c === 'RC' || c === 'PF') || ''
+    }
+
+    function faltasIn(rowItems) {
+      if (!rowItems || !rowItems.length) return 0;
+      const maxX = Math.max(...rowItems.map(i => i.x), 0);
+      // O TGF/Faltas fica nas últimas colunas antes do RF. Pegamos apenas números na faixa final da linha.
+      const cand = rowItems
+        .filter(i => i.x >= maxX - 160 && i.x <= maxX - 12 && /^\d+$/.test(String(i.str).trim()))
+        .sort((a, b) => a.x - b.x);
+      if (cand.length) return Number(cand[cand.length - 1].str);
+      return 0;
+    }
+    function findHeaderColumns(items, rowNums = []) {
+      const n = v => norm(v).replace(/\s+/g, '');
+      const firstRowY = rowNums.length ? rowNums[0].y : null;
+      const labelSet = new Set(['N1', 'N2', '1ªMB', '1ºMB', '1°MB', '1MB', '1ªTF', '1ºTF', '1°TF', '2ªMB', '2ºMB', '2°MB', '2MB', '2ªTF', '2ºTF', '2°TF', '2TF']);
+      let labels = items
+        .filter(i => labelSet.has(n(i.str)) || /^1[ªº°]?MB$/.test(n(i.str)) || /^1[ªº°]?TF$/.test(n(i.str)) || /^2[ªº°]?MB$/.test(n(i.str)) || /^2[ªº°]?TF$/.test(n(i.str)))
+        .map(i => ({ ...i, key: n(i.str) }));
+
+      // Evita pegar as siglas da legenda do rodapé. As colunas corretas ficam acima da 1ª linha de disciplina.
+      if (firstRowY !== null) {
+        const acima = labels.filter(i => i.y > firstRowY + 2 && i.y < firstRowY + 90);
+        if (acima.length >= 6) labels = acima;
+      }
+
+      // Agrupa por linhas horizontais e usa a linha com a sequência maior de cabeçalhos da tabela.
+      const grupos = [];
+      labels.sort((a, b) => b.y - a.y || a.x - b.x).forEach(it => {
+        let g = grupos.find(g => Math.abs(g.y - it.y) <= 5);
+        if (!g) { g = { y: it.y, items: [] }; grupos.push(g) }
+        g.items.push(it);
+      });
+      grupos.forEach(g => g.items.sort((a, b) => a.x - b.x));
+      grupos.sort((a, b) => b.items.length - a.items.length || b.y - a.y);
+      const header = grupos[0]?.items || labels.sort((a, b) => a.x - b.x);
+
+      // A ordem esperada é: N1, N2, 1ªMB, 1ªTF, N1, N2, 2ªMB, 2ªTF.
+      const mb1Item = header.find(i => /^1[ªº°]?MB$/.test(i.key));
+      let n1b1Item = null;
+      let n1b2Item = null;
+      if (mb1Item) {
+        const antes = header.filter(i => i.key === 'N1' && i.x < mb1Item.x).sort((a, b) => a.x - b.x);
+        n1b1Item = antes[0] || null;
+        const depois = header.filter(i => i.key === 'N1' && i.x > mb1Item.x + 10).sort((a, b) => a.x - b.x);
+        n1b2Item = depois[0] || null;
+      }
+
+      function boundsFor(centerItem) {
+        if (!centerItem) return null;
+        const all = header.filter(i => i.x > 30 && i.x < 900).sort((a, b) => a.x - b.x);
+        const idx = all.findIndex(i => i === centerItem || (Math.abs(i.x - centerItem.x) < 0.1 && Math.abs(i.y - centerItem.y) < 0.1 && i.key === centerItem.key));
+        const prev = idx > 0 ? all[idx - 1] : null;
+        const next = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
+        const left = prev ? (prev.x + centerItem.x) / 2 : centerItem.x - 18;
+        const right = next ? (centerItem.x + next.x) / 2 : centerItem.x + 18;
+        return { x: centerItem.x, left, right };
+      }
+
+      return { n1b1: boundsFor(n1b1Item), mb1: boundsFor(mb1Item), n1b2: boundsFor(n1b2Item) };
+    }
+    function parseRows(items) {
+      const rowNums = items.filter(i => i.x < 35 && /^\d{1,2}$/.test(i.str)).map(i => ({ n: Number(i.str), y: i.y })).filter(r => r.n >= 1 && r.n <= 35);
+      const unique = []; const seen = new Set(); rowNums.sort((a, b) => a.n - b.n).forEach(r => { if (!seen.has(r.n)) { seen.add(r.n); unique.push(r) } });
+      const cols = findHeaderColumns(items, unique);
+      const rows = [];
+      for (let idx = 0; idx < unique.length; idx++) {
+        const r = unique[idx], next = unique[idx + 1];
+        let low = r.y - 8, high = r.y + 8;
+        if (next) {
+          low = Math.min(r.y, next.y) + 1; high = Math.max(r.y, next.y) - 1;
+          if (Math.abs(r.y - next.y) > 10) { low = r.y - 5; high = r.y + 5 }
+        }
+        const bandItems = items.filter(i => i.y >= Math.min(low, high) - 1 && i.y <= Math.max(low, high) + 1);
+        const rowItems = items.filter(i => Math.abs(i.y - r.y) <= 4);
+        const firstColX = cols.mb1?.x || cols.n1b2?.x || 235;
+        const discParts = bandItems
+          .filter(i => i.x >= 35 && i.x <= Math.max(190, firstColX - 25))
+          .sort((a, b) => Math.abs(a.y - b.y) > 2 ? (b.y - a.y) : (a.x - b.x))
+          .map(i => i.str);
+        let disciplina = clean(discParts.join(' '));
+        if (!disciplina || /Disciplinas/i.test(disciplina)) continue;
+        let n1b1 = cols.n1b1 ? valueIn(rowItems, cols.n1b1.left, cols.n1b1.right) : null;
+        let mb1 = cols.mb1 ? valueIn(rowItems, cols.mb1.left, cols.mb1.right) : null;
+        let n1b2 = cols.n1b2 ? valueIn(rowItems, cols.n1b2.left, cols.n1b2.right) : null;
+        const rf = statusIn(rowItems);
+        const faltas = faltasIn(rowItems);
+        rows.push({ n: r.n, disciplina, n1b1, mb1, n1b2, faltas, rf });
+      }
+      return rows;
+    }
+    async function extrairAlunos(file) {
+      const buffer = await file.arrayBuffer(); const pdf = await pdfjsLib.getDocument({ data: buffer }).promise; const alunos = [];
+      for (let p = 1; p <= pdf.numPages; p++) { const page = await pdf.getPage(p); const textContent = await page.getTextContent(); const items = makeItems(textContent); const fullText = items.map(i => i.str).join(' '); if (!/ESTUDANTE/i.test(fullText) || !/TURMA/i.test(fullText)) continue; const header = getHeader(items, fullText); const rows = parseRows(items); if (rows.length) alunos.push({ ...header, rows, pagina: p }); }
+      return alunos;
+    }
+    function alunoSemNenhumaNota(a) {
+      // Boletim totalmente em branco: considera TODAS as linhas do aluno, inclusive TT/CA/N/D.
+      // Ex.: se o aluno aparece com RF = TT, mas não possui nenhuma nota lançada, ele deve entrar
+      // na lista de "Alunos sem lançamento de notas" e não no detalhamento principal.
+      const linhas = (a.rows || []);
+      if (!linhas.length) return false;
+      return !linhas.some(r => r.n1b1 !== null || r.mb1 !== null || r.n1b2 !== null);
+    }
+
+    function alunoSemNotaValidaOuZero(a) {
+      // Identifica alunos sem nota válida: todos os componentes estão sem lançamento
+      // ou possuem apenas nota 0 nas colunas lidas (N1 1ºB, 1ªMB e N1 2ºB).
+      const linhas = (a.rows || []).filter(r => !ADMIN_CODES.includes(norm(r.rf)));
+      const base = linhas.length ? linhas : (a.rows || []);
+      if (!base.length) return false;
+      return !base.some(r => {
+        const notas = [r.n1b1, r.mb1, r.n1b2].filter(v => v !== null);
+        return notas.some(v => Number(v) > 0);
+      });
+    }
+
+    function motivoSemNotaValida(a) {
+      return alunoSemNenhumaNota(a)
+        ? 'Sem nenhuma nota lançada em todos os componentes.'
+        : 'Todos os componentes estão sem nota válida: lançamentos em branco ou com nota 0.';
+    }
+
+    function analisar(alunos) {
+      const limiteFaltas = Number($('limiteFaltas')?.value || 10);
+      const mediaMinima = Number($('mediaMinima')?.value || 6);
+      alunosIgnorados = alunos.filter(alunoSemNenhumaNota).map(a => ({ aluno: a.aluno, turma: a.turma, pagina: a.pagina }));
+      alunosSemNotaValida = alunos
+        .filter(alunoSemNotaValidaOuZero)
+        .map(a => ({ aluno: a.aluno, turma: a.turma, pagina: a.pagina, motivo: motivoSemNotaValida(a) }));
+      const alunosConsiderados = alunos.filter(a => !alunoSemNenhumaNota(a));
+      return alunosConsiderados.map(a => {
+        const ativos = a.rows.filter(r => !ADMIN_CODES.includes(norm(r.rf)));
+        const admins = a.rows.filter(r => ADMIN_CODES.includes(norm(r.rf)));
+        const sem1mb = ativos.filter(r => r.mb1 === null).map(r => nomeComponente(r.disciplina));
+        const semN1b2 = ativos.filter(r => r.n1b2 === null).map(r => nomeComponente(r.disciplina));
+        const abaixo6 = [];
+        const faltasAltas = ativos.filter(r => Number(r.faltas || 0) >= limiteFaltas).map(r => ({ disciplina: nomeComponente(r.disciplina), faltas: Number(r.faltas || 0) }));
+        ativos.forEach(r => {
+          const comp = nomeComponente(r.disciplina);
+          // Risco pedagógico: usa a 1ªMB; se a 1ªMB estiver vazia, usa a N1 do 1º bimestre.
+          // Não mistura com carência de lançamento nem com N1 do 2º bimestre.
+          const notaBase = r.mb1 !== null ? r.mb1 : r.n1b1;
+          if (notaBase !== null && notaBase < mediaMinima) abaixo6.push({ disciplina: comp, nota: notaBase });
+        });
+        const lanc1mb = ativos.filter(r => r.mb1 !== null).length;
+        const lancN1b2 = ativos.filter(r => r.n1b2 !== null).length;
+        const totalComp = ativos.length;
+        const bothMissing = ativos.filter(r => r.mb1 === null && r.n1b2 === null).map(r => nomeComponente(r.disciplina));
+        let situacao = 'REGULAR';
+        if (!totalComp) situacao = 'ADMIN';
+        else if (bothMissing.length || (sem1mb.length && semN1b2.length)) situacao = 'CRITICO';
+        else if (sem1mb.length || semN1b2.length) situacao = 'ATENCAO';
+        let obs = [];
+        if (situacao === 'ADMIN') obs.push('Aluno sem componente ativo para análise ou apenas com situação administrativa.');
+        if (sem1mb.length) obs.push(`${sem1mb.length} disciplina(s) sem 1ªMB.`);
+        if (semN1b2.length) obs.push(`${semN1b2.length} disciplina(s) sem N1 2ºB.`);
+        if (abaixo6.length) obs.push(`${abaixo6.length} nota(s) abaixo da média mínima.`);
+        if (faltasAltas.length) obs.push(`Componentes com faltas acima do limite: ${faltasAltas.map(f => `${f.disciplina} (${f.faltas})`).join('; ')}.`);
+        if (!obs.length) obs.push('1ªMB e N1 do 2º bimestre lançadas nos componentes ativos, sem nota abaixo da média mínima.');
+        return { ...a, ativos, admins, totalComp, lanc1mb, lancN1b2, sem1mb, semN1b2, abaixo6, faltasAltas, bothMissing, situacao, obs: obs.join(' ') };
+      });
+    }
+    function badgeClass(s) { return s === 'CRITICO' ? 'risco' : s === 'ATENCAO' ? 'atencao' : s === 'ADMIN' ? 'admin' : 'ok' }
+    function statusNome(s) { return s === 'CRITICO' ? 'CRÍTICO' : s === 'ATENCAO' ? 'ATENÇÃO' : s === 'ADMIN' ? 'ADMIN.' : 'REGULAR' }
+
+    function nomeComponente(valor) {
+      return clean(String(valor || ''))
+        .replace(/\s+\d+(?:[.,]\d+)?\s*$/, '')
+        .trim();
+    }
+    function listaComponentes(lista) {
+      return (lista || []).map(nomeComponente).filter(Boolean).join('\n') || '-';
+    }
+    function listaComponentesPdf(lista) {
+      return (lista || []).map(nomeComponente).filter(Boolean).join('; ') || '-';
+    }
+    function fmtNota(n) { return (n === null || n === undefined || Number.isNaN(Number(n))) ? '-' : Number(n).toFixed(1).replace('.', ',') }
+    function listaAbaixo6(lista) {
+      return (lista || []).map(r => r.nota === null || r.nota === undefined ? `${r.disciplina}` : `${r.disciplina} (${fmtNota(r.nota)})`).join('\n') || '-';
+    }
+    function listaAbaixo6Pdf(lista) {
+      return (lista || []).map(r => r.nota === null || r.nota === undefined ? `${r.disciplina}` : `${r.disciplina} (${fmtNota(r.nota)})`).join('; ') || '-';
+    }
+    function listaFaltas(lista) {
+      return (lista || []).map(r => `${r.disciplina} (${r.faltas})`).join('\n') || '-';
+    }
+    function listaFaltasPdf(lista) {
+      return (lista || []).map(r => `${r.disciplina} (${r.faltas})`).join('; ') || '-';
+    }
+    function passaFiltro(d) { switch (filtroAtual) { case 'CRITICO': return d.situacao === 'CRITICO'; case 'ATENCAO': return d.situacao === 'ATENCAO'; case 'REGULAR': return d.situacao === 'REGULAR'; case 'SEM_1MB': return d.sem1mb.length; case 'SEM_N1_2B': return d.semN1b2.length; case 'ABAIXO_6': return d.abaixo6 && d.abaixo6.length; case 'FALTAS': return d.faltasAltas && d.faltasAltas.length; case 'ADMIN': return d.situacao === 'ADMIN' || d.admins.length; default: return true } }
+
+    function calcularMediaAluno(d) {
+      const notas = [];
+      (d.ativos || []).forEach(r => {
+        const notaBase = r.mb1 !== null ? r.mb1 : r.n1b1;
+        if (notaBase !== null && !Number.isNaN(Number(notaBase))) notas.push(Number(notaBase));
+      });
+      if (!notas.length) return null;
+      return notas.reduce((a, b) => a + b, 0) / notas.length;
+    }
+    function atualizarIndicadoresPedagogicos(dados) {
+      const mediaMinima = Number($('mediaMinima')?.value || 6);
+      const analisados = dados.filter(d => d.situacao !== 'ADMIN' && d.totalComp > 0);
+      const medias = analisados.map(d => ({ d, media: calcularMediaAluno(d) })).filter(x => x.media !== null);
+      const mediaTurma = medias.length ? medias.reduce((s, x) => s + x.media, 0) / medias.length : null;
+      const acima = medias.filter(x => x.media >= mediaMinima);
+      const abaixo = medias.filter(x => x.media < mediaMinima);
+      if ($('mediaGeralTurma')) $('mediaGeralTurma').textContent = mediaTurma === null ? '-' : fmtNota(mediaTurma);
+      if ($('alunosAcimaMedia')) $('alunosAcimaMedia').textContent = acima.length;
+      if ($('pctAcimaMedia')) $('pctAcimaMedia').textContent = medias.length ? ((acima.length / medias.length) * 100).toFixed(1).replace('.', ',') + '%' : '0%';
+      if ($('alunosAbaixoMedia')) $('alunosAbaixoMedia').textContent = abaixo.length;
+      if ($('pctAbaixoMedia')) $('pctAbaixoMedia').textContent = medias.length ? ((abaixo.length / medias.length) * 100).toFixed(1).replace('.', ',') + '%' : '0%';
+
+      const possiveisPorMedia = medias.filter(x => {
+        const faltas = (x.d.ativos || []).reduce((s, r) => s + Number(r.faltas || 0), 0);
+        return x.media < 5 || faltas >= 100 || (x.d.abaixo6 || []).length >= 5;
+      }).map(x => ({
+        aluno: x.d.aluno,
+        media: x.media,
+        faltas: (x.d.ativos || []).reduce((s, r) => s + Number(r.faltas || 0), 0),
+        riscos: x.d.abaixo6 || []
+      }));
+
+      const nomesJaIncluidos = new Set(possiveisPorMedia.map(a => norm(a.aluno)));
+      const possiveisSemNota = (alunosSemNotaValida || [])
+        .filter(a => !nomesJaIncluidos.has(norm(a.aluno)))
+        .map(a => ({
+          aluno: a.aluno,
+          media: null,
+          faltas: '-',
+          riscos: [{ disciplina: a.motivo || 'Sem nota válida ou somente com zero', nota: null }],
+          semNotaValida: true
+        }));
+
+      const possiveis = [...possiveisPorMedia, ...possiveisSemNota];
+      if ($('possivelEvasao')) $('possivelEvasao').textContent = possiveis.length;
+      if ($('listaPossivelEvasao')) {
+        $('listaPossivelEvasao').innerHTML = possiveis.length
+          ? `<table><thead><tr><th>Aluno</th><th>Média geral</th><th>Total de faltas</th><th>Disciplinas em risco</th></tr></thead><tbody>${possiveis.map(a => `<tr><td><strong>${a.aluno}</strong></td><td>${fmtNota(a.media)}</td><td>${a.faltas}</td><td class="disciplinas">${listaAbaixo6(a.riscos)}</td></tr>`).join('')}</tbody></table>`
+          : `<table><thead><tr><th>Aluno</th><th>Média geral</th><th>Total de faltas</th><th>Disciplinas em risco</th></tr></thead><tbody><tr><td colspan="4"><strong>Nenhum aluno identificado com possível evasão pelos critérios definidos.</strong></td></tr></tbody></table>`;
+      }
+
+      const mapa = new Map();
+      analisados.forEach(d => {
+        (d.ativos || []).forEach(r => {
+          const notaBase = r.mb1 !== null ? r.mb1 : r.n1b1;
+          if (notaBase === null || Number.isNaN(Number(notaBase))) return;
+          const nome = nomeComponente(r.disciplina);
+          if (!nome) return;
+          if (!mapa.has(nome)) mapa.set(nome, { disciplina: nome, avaliados: 0, abaixo: 0, soma: 0 });
+          const obj = mapa.get(nome);
+          obj.avaliados++;
+          obj.soma += Number(notaBase);
+          if (Number(notaBase) < mediaMinima) obj.abaixo++;
+        });
+      });
+      const linhas = [...mapa.values()].map(o => ({ ...o, pct: o.avaliados ? o.abaixo / o.avaliados * 100 : 0, media: o.avaliados ? o.soma / o.avaliados : null }))
+        .sort((a, b) => (b.abaixo - a.abaixo) || (b.pct - a.pct) || a.disciplina.localeCompare(b.disciplina));
+      if ($('tabelaDificuldades')) {
+        $('tabelaDificuldades').innerHTML = linhas.length
+          ? `<table><thead><tr><th>Disciplina</th><th>Avaliados</th><th>Abaixo da média</th><th>% abaixo</th><th>Média</th></tr></thead><tbody>${linhas.map(l => `<tr><td>${l.disciplina}</td><td>${l.avaliados}</td><td>${l.abaixo}</td><td>${l.pct.toFixed(1).replace('.', ',')}%</td><td>${fmtNota(l.media)}</td></tr>`).join('')}</tbody></table>`
+          : '<p><span class="badge atencao">Não há notas suficientes para calcular as disciplinas com maior dificuldade.</span></p>';
+      }
+    }
+
+    function renderFilterButtons() { }
+    function render(dados) {
+      dadosGerados = dados; renderFilterButtons();
+      const turma = dados.find(d => d.turma && d.turma !== 'Turma não identificada')?.turma || 'Turma não identificada'; const tipo = dados.find(d => d.tipo)?.tipo || 'EJA';
+      $('turmaTitulo').textContent = `TURMA: ${turma}`; $('tipoTitulo').textContent = `Tipo identificado: ${tipo}`;
+      const ativos = dados.filter(d => d.situacao !== 'ADMIN'); const totalCells = ativos.reduce((s, d) => s + d.totalComp * 2, 0); const filled = ativos.reduce((s, d) => s + d.lanc1mb + d.lancN1b2, 0); const pct = totalCells ? Math.round((filled / totalCells) * 100) : 0;
+      $('totalAlunos').textContent = dados.length + alunosIgnorados.length; $('totalAtivos').textContent = ativos.length; $('totalCriticos').textContent = dados.filter(d => d.situacao === 'CRITICO').length; $('totalAtencao').textContent = dados.filter(d => d.situacao === 'ATENCAO').length; $('totalRegulares').textContent = dados.filter(d => d.situacao === 'REGULAR').length; $('totalAbaixo6').textContent = dados.filter(d => d.abaixo6 && d.abaixo6.length).length; $('totalFaltasRisco').textContent = dados.filter(d => d.faltasAltas && d.faltasAltas.length).length; $('totalSem1MB').textContent = dados.filter(d => d.sem1mb.length).length; $('totalSemN1B2').textContent = dados.filter(d => d.semN1b2.length).length;
+      const pend = dados.filter(d => d.sem1mb.length || d.semN1b2.length);
+      $('listaPendencias').innerHTML = pend.length ? `<p><strong>${pend.length} aluno(s) com pendência de notas</strong></p><table><thead><tr><th>Aluno</th><th>Situação</th><th>Sem 1ªMB</th><th>Sem N1 2ºB</th></tr></thead><tbody>${pend.map(d => `<tr><td><strong>${d.aluno}</strong></td><td><span class="badge ${badgeClass(d.situacao)}">${statusNome(d.situacao)}</span></td><td class="disciplinas">${listaComponentes(d.sem1mb)}</td><td class="disciplinas">${listaComponentes(d.semN1b2)}</td></tr>`).join('')}</tbody></table>` : '<p><span class="badge ok">Nenhuma pendência de 1ªMB ou N1 2ºB encontrada.</span></p>';
+      if ($('listaSemNotaValida')) {
+        $('listaSemNotaValida').innerHTML = alunosSemNotaValida.length
+          ? `<p><strong>${alunosSemNotaValida.length} aluno(s) sem nota válida ou somente com zero</strong></p><table><thead><tr><th>Aluno</th><th>Situação identificada</th></tr></thead><tbody>${alunosSemNotaValida.map(a => `<tr><td><strong>${a.aluno}</strong></td><td>${a.motivo}</td></tr>`).join('')}</tbody></table>`
+          : '<p><span class="badge ok">Nenhum aluno sem nota válida ou somente com zero foi identificado.</span></p>';
+      }
+      atualizarIndicadoresPedagogicos(dados);
+      const tbody = $('tbody'); tbody.innerHTML = '';
+      dados.filter(passaFiltro).forEach(d => { const cls = badgeClass(d.situacao); const sit = statusNome(d.situacao); const tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${d.aluno}</strong><div class="small">${d.totalComp} componente(s) ativo(s) lido(s)</div></td><td><span class="badge ${cls}">${sit}</span></td><td><span class="badge ${d.sem1mb.length ? 'atencao' : 'ok'}">${d.lanc1mb}/${d.totalComp}</span></td><td><span class="badge ${d.semN1b2.length ? 'atencao' : 'ok'}">${d.lancN1b2}/${d.totalComp}</span></td><td class="disciplinas">${listaAbaixo6(d.abaixo6)}</td><td class="disciplinas">${listaFaltas(d.faltasAltas)}</td><td>${d.obs}</td>`; tbody.appendChild(tr); });
+      $('results').classList.remove('hidden');
+    }
+    $('filtro').addEventListener('change', e => { filtroAtual = e.target.value; if (dadosGerados.length) render(dadosGerados) });
+    $('limiteFaltas').addEventListener('input', () => { if (dadosGerados.length) { dadosGerados = analisar(dadosGerados); render(dadosGerados); } });
+    $('mediaMinima').addEventListener('input', () => { if (dadosGerados.length) { dadosGerados = analisar(dadosGerados); render(dadosGerados); } });
+    function textoSeguro(v) { return String(v ?? '').replace(/\n/g, ' ').trim() }
+
+    function gerarPdfOrganizado() {
+      if (!dadosGerados.length) {
+        alert('Antes de gerar o PDF, analise o boletim.');
+        return;
+      }
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert('A biblioteca jsPDF ainda não carregou. Verifique a internet e tente novamente.');
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+      if (typeof doc.autoTable !== 'function') {
+        alert('A biblioteca AutoTable ainda não carregou. Verifique a internet e tente novamente.');
+        return;
+      }
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      const margem = 8;
+      const topMargin = 35;
+      const bottomMargin = 12;
+      const dataHora = new Date().toLocaleString('pt-BR');
+      const dataCurta = new Date().toLocaleDateString('pt-BR');
+      const turma = dadosGerados.find(d => d.turma)?.turma || 'Turma não identificada';
+      const tipo = dadosGerados.find(d => d.tipo)?.tipo || 'EJA';
+      const nomeTurma = turma.replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '_') || 'turma';
+      const mediaMinima = Number($('mediaMinima')?.value || 6);
+      const limiteFaltas = Number($('limiteFaltas')?.value || 10);
+      const ativos = dadosGerados.filter(d => d.situacao !== 'ADMIN');
+
+      function safeText(v) { return String(v ?? '-').replace(/\s+/g, ' ').trim() || '-'; }
+      function safeNota(v) { return (v === null || v === undefined || Number.isNaN(Number(v))) ? '-' : Number(v).toFixed(1).replace('.', ','); }
+      function sumFaltas(d) { return (d.ativos || []).reduce((s, r) => s + Number(r.faltas || 0), 0); }
+      function tableTheme(headColor = [15, 47, 102]) {
+        return {
+          theme: 'grid',
+          margin: { top: topMargin, left: margem, right: margem, bottom: bottomMargin },
+          styles: { fontSize: 7.3, cellPadding: 1.5, overflow: 'linebreak', valign: 'top', lineColor: [219, 227, 238], lineWidth: 0.1 },
+          headStyles: { fillColor: headColor, textColor: 255, fontStyle: 'bold', halign: 'center' },
+          alternateRowStyles: { fillColor: [248, 250, 252] },
+          didDrawPage: desenharCabecalhoRodape
+        };
+      }
+      function desenharCabecalhoRodape() {
+        // Cabeçalho do relatório sem logos, para evitar erro na geração do PDF
+        doc.setFillColor(15, 47, 102);
+        doc.rect(0, 0, pageW, 29, 'F');
+
+        // título e equipe
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(255, 255, 255);
+        doc.text('Relatório Pedagógico EJA - Análise de Boletins', margem, 11);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.text('Gerente: Clarisse  |  Coordenador EJA: Luiz  |  Coordenadora Alfabetiza: Du Carmo', margem, 16);
+
+        // informações da turma
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.text(`Turma: ${turma}`, margem, 22);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Tipo: ${tipo}  |  Gerado em: ${dataCurta}`, pageW - margem, 22, { align: 'right' });
+
+        // linha divisória inferior
+        doc.setDrawColor(219, 227, 238);
+        doc.setLineWidth(0.3);
+        doc.line(margem, 31, pageW - margem, 31);
+
+        const page = doc.internal.getCurrentPageInfo().pageNumber;
+        const total = doc.internal.getNumberOfPages();
+        doc.setFontSize(7.5);
+        doc.setTextColor(100, 116, 139);
+        doc.text(`Página ${page} de ${total}`, pageW - margem, pageH - 5, { align: 'right' });
+        doc.text('21ª GRE Teresina - Sudeste | SEDUC | EJA', margem, pageH - 5);
+        doc.setTextColor(11, 27, 51);
+      }
+      function ensureSpace(y, needed = 20) {
+        if (y + needed > pageH - bottomMargin) { doc.addPage(); return topMargin; }
+        return y;
+      }
+      function titulo(sec, y, color = [15, 47, 102]) {
+        y = ensureSpace(y, 14);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(color[0], color[1], color[2]);
+        doc.text(sec, margem, y);
+        doc.setTextColor(11, 27, 51);
+        return y + 4;
+      }
+
+      desenharCabecalhoRodape();
+      let y = topMargin;
+
+      // CAPA / RESUMO
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(15);
+      doc.setTextColor(15, 47, 102);
+      doc.text('Resumo Geral', margem, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(11, 27, 51);
+      doc.text(`Relatório completo gerado em ${dataHora}. Média mínima: ${safeNota(mediaMinima)}. Faltas em atenção: ${limiteFaltas}.`, margem, y);
+      y += 4;
+
+      const resumo = [
+        ['Total de alunos', dadosGerados.length + (alunosSemNotaValida || []).length],
+        ['Alunos analisados', dadosGerados.length],
+        ['Componentes ativos', ativos.reduce((s, d) => s + (d.totalComp || 0), 0)],
+        ['Críticos', dadosGerados.filter(d => d.situacao === 'CRITICO').length],
+        ['Atenção', dadosGerados.filter(d => d.situacao === 'ATENCAO').length],
+        ['Regulares', dadosGerados.filter(d => d.situacao === 'REGULAR').length],
+        ['Com nota abaixo da média', dadosGerados.filter(d => d.abaixo6 && d.abaixo6.length).length],
+        ['Com faltas em risco', dadosGerados.filter(d => d.faltasAltas && d.faltasAltas.length).length],
+        ['Sem 1ªMB', dadosGerados.filter(d => d.sem1mb && d.sem1mb.length).length],
+        ['Sem N1 2ºB', dadosGerados.filter(d => d.semN1b2 && d.semN1b2.length).length],
+        ['Sem nota válida / só zero', (alunosSemNotaValida || []).length]
+      ];
+      doc.autoTable({
+        ...tableTheme([15, 47, 102]),
+        startY: y,
+        head: [['Indicador', 'Quantidade']],
+        body: resumo,
+        columnStyles: { 0: { cellWidth: 70 }, 1: { cellWidth: 28, halign: 'center', fontStyle: 'bold' } },
+        styles: { ...tableTheme().styles, fontSize: 8.5, cellPadding: 2 }
+      });
+      y = doc.lastAutoTable.finalY + 8;
+
+      // Indicadores pedagógicos
+      const medias = ativos.map(d => ({ d, media: calcularMediaAluno(d) })).filter(x => x.media !== null);
+      const mediaTurma = medias.length ? medias.reduce((s, x) => s + x.media, 0) / medias.length : null;
+      const acima = medias.filter(x => x.media >= mediaMinima);
+      const abaixo = medias.filter(x => x.media < mediaMinima);
+      const possiveisPorMedia = medias.filter(x => {
+        const faltas = sumFaltas(x.d);
+        return x.media < 5 || faltas >= 100 || (x.d.abaixo6 || []).length >= 5;
+      }).map(x => ({ aluno: x.d.aluno, media: x.media, faltas: sumFaltas(x.d), riscos: x.d.abaixo6 || [], motivo: '' }));
+      const nomesJaIncluidos = new Set(possiveisPorMedia.map(a => norm(a.aluno)));
+      const possiveisSemNota = (alunosSemNotaValida || []).filter(a => !nomesJaIncluidos.has(norm(a.aluno))).map(a => ({ aluno: a.aluno, media: null, faltas: '-', riscos: [], motivo: a.motivo || 'Sem nota válida ou somente com zero' }));
+      const possiveis = [...possiveisPorMedia, ...possiveisSemNota];
+
+      y = titulo('Indicadores Complementares da Turma', y, [146, 64, 14]);
+      doc.autoTable({
+        ...tableTheme([146, 64, 14]),
+        startY: y,
+        head: [['Média geral da turma', 'Alunos acima da média', 'Alunos abaixo da média', 'Possível evasão']],
+        body: [[
+          safeNota(mediaTurma),
+          `${acima.length}${medias.length ? ' (' + ((acima.length / medias.length) * 100).toFixed(1).replace('.', ',') + '%)' : ''}`,
+          `${abaixo.length}${medias.length ? ' (' + ((abaixo.length / medias.length) * 100).toFixed(1).replace('.', ',') + '%)' : ''}`,
+          possiveis.length
+        ]],
+        styles: { ...tableTheme().styles, fontSize: 9, halign: 'center', cellPadding: 3 },
+        columnStyles: { 0: { cellWidth: 55 }, 1: { cellWidth: 55 }, 2: { cellWidth: 55 }, 3: { cellWidth: 55 } }
+      });
+      y = doc.lastAutoTable.finalY + 7;
+
+      y = titulo('Alunos com Possível Evasão', y, [153, 27, 27]);
+      const bodyEvasao = possiveis.length ? possiveis.map(a => [
+        safeText(a.aluno),
+        safeNota(a.media),
+        String(a.faltas ?? '-'),
+        a.motivo || listaAbaixo6Pdf(a.riscos)
+      ]) : [['Nenhum aluno identificado com possível evasão pelos critérios definidos.', '-', '-', '-']];
+      doc.autoTable({
+        ...tableTheme([153, 27, 27]),
+        startY: y,
+        head: [['Aluno', 'Média geral', 'Total de faltas', 'Disciplinas/Motivo']],
+        body: bodyEvasao,
+        columnStyles: { 0: { cellWidth: 70 }, 1: { cellWidth: 26, halign: 'center' }, 2: { cellWidth: 28, halign: 'center' }, 3: { cellWidth: 'auto' } }
+      });
+      y = doc.lastAutoTable.finalY + 7;
+
+      // Sem nota válida / somente zero
+      y = titulo('Alunos sem Nota Válida ou Somente com Zero', y, [146, 64, 14]);
+      const bodySemNota = (alunosSemNotaValida || []).length ? alunosSemNotaValida.map(a => [safeText(a.aluno), safeText(a.motivo)]) : [['Nenhum aluno sem nota válida ou somente com zero foi identificado.', '-']];
+      doc.autoTable({
+        ...tableTheme([146, 64, 14]),
+        startY: y,
+        head: [['Aluno', 'Situação identificada']],
+        body: bodySemNota,
+        columnStyles: { 0: { cellWidth: 85 }, 1: { cellWidth: 'auto' } }
+      });
+      y = doc.lastAutoTable.finalY + 7;
+
+      // Disciplinas com maior dificuldade
+      const mapa = new Map();
+      ativos.forEach(d => {
+        (d.ativos || []).forEach(r => {
+          const notaBase = r.mb1 !== null ? r.mb1 : r.n1b1;
+          if (notaBase === null || Number.isNaN(Number(notaBase))) return;
+          const nome = nomeComponente(r.disciplina);
+          if (!nome) return;
+          if (!mapa.has(nome)) mapa.set(nome, { disciplina: nome, avaliados: 0, abaixo: 0, soma: 0 });
+          const obj = mapa.get(nome);
+          obj.avaliados++;
+          obj.soma += Number(notaBase);
+          if (Number(notaBase) < mediaMinima) obj.abaixo++;
+        });
+      });
+      const dificuldades = [...mapa.values()].map(o => ({ ...o, pct: o.avaliados ? o.abaixo / o.avaliados * 100 : 0, media: o.avaliados ? o.soma / o.avaliados : null }))
+        .sort((a, b) => (b.abaixo - a.abaixo) || (b.pct - a.pct) || a.disciplina.localeCompare(b.disciplina));
+      y = titulo('Disciplinas com Maior Dificuldade', y, [15, 47, 102]);
+      doc.autoTable({
+        ...tableTheme([15, 47, 102]),
+        startY: y,
+        head: [['Disciplina', 'Avaliados', 'Abaixo da média', '% abaixo', 'Média']],
+        body: dificuldades.length ? dificuldades.map(l => [safeText(l.disciplina), l.avaliados, l.abaixo, l.pct.toFixed(1).replace('.', ',') + '%', safeNota(l.media)]) : [['Sem dados suficientes.', '-', '-', '-', '-']],
+        columnStyles: { 0: { cellWidth: 'auto' }, 1: { cellWidth: 22, halign: 'center' }, 2: { cellWidth: 28, halign: 'center' }, 3: { cellWidth: 22, halign: 'center' }, 4: { cellWidth: 22, halign: 'center' } }
+      });
+      y = doc.lastAutoTable.finalY + 7;
+
+      // Carência de notas
+      const pend = dadosGerados.filter(d => (d.sem1mb && d.sem1mb.length) || (d.semN1b2 && d.semN1b2.length));
+      y = titulo('Alunos com Carência de Notas', y, [146, 64, 14]);
+      doc.autoTable({
+        ...tableTheme([146, 64, 14]),
+        startY: y,
+        head: [['Aluno', 'Situação', '1ªMB', 'N1 2ºB', 'Sem 1ªMB', 'Sem N1 2ºB']],
+        body: pend.length ? pend.map(d => [
+          safeText(d.aluno),
+          statusNome(d.situacao),
+          `${d.lanc1mb}/${d.totalComp}`,
+          `${d.lancN1b2}/${d.totalComp}`,
+          listaComponentesPdf(d.sem1mb),
+          listaComponentesPdf(d.semN1b2)
+        ]) : [['Nenhuma pendência de 1ªMB ou N1 2ºB encontrada.', '-', '-', '-', '-', '-']],
+        columnStyles: { 0: { cellWidth: 55 }, 1: { cellWidth: 22, halign: 'center' }, 2: { cellWidth: 18, halign: 'center' }, 3: { cellWidth: 20, halign: 'center' }, 4: { cellWidth: 82 }, 5: { cellWidth: 'auto' } }
+      });
+      y = doc.lastAutoTable.finalY + 7;
+
+      // Detalhamento por aluno
+      y = titulo('Detalhamento por Aluno', y, [15, 47, 102]);
+      doc.autoTable({
+        ...tableTheme([15, 47, 102]),
+        startY: y,
+        head: [['Aluno', 'Situação', '1ªMB', 'N1 2ºB', 'Média', 'Faltas', 'Disciplinas em risco', 'Faltas em risco', 'Observação']],
+        body: dadosGerados.map(d => [
+          safeText(d.aluno),
+          statusNome(d.situacao),
+          `${d.lanc1mb}/${d.totalComp}`,
+          `${d.lancN1b2}/${d.totalComp}`,
+          safeNota(calcularMediaAluno(d)),
+          String(sumFaltas(d)),
+          listaAbaixo6Pdf(d.abaixo6),
+          listaFaltasPdf(d.faltasAltas),
+          safeText(d.obs)
+        ]),
+        styles: { ...tableTheme().styles, fontSize: 6.3, cellPadding: 1.2 },
+        headStyles: { fillColor: [15, 47, 102], textColor: 255, fontStyle: 'bold', halign: 'center' },
+        columnStyles: { 0: { cellWidth: 42 }, 1: { cellWidth: 18, halign: 'center' }, 2: { cellWidth: 14, halign: 'center' }, 3: { cellWidth: 16, halign: 'center' }, 4: { cellWidth: 14, halign: 'center' }, 5: { cellWidth: 15, halign: 'center' }, 6: { cellWidth: 55 }, 7: { cellWidth: 50 }, 8: { cellWidth: 'auto' } },
+        didParseCell: function (data) {
+          if (data.section === 'body' && data.column.index === 1) {
+            const v = String(data.cell.raw || '');
+            if (v.includes('CRÍTICO')) { data.cell.styles.textColor = [185, 28, 28]; data.cell.styles.fontStyle = 'bold'; }
+            else if (v.includes('ATENÇÃO')) { data.cell.styles.textColor = [146, 64, 14]; data.cell.styles.fontStyle = 'bold'; }
+            else if (v.includes('REGULAR')) { data.cell.styles.textColor = [22, 101, 52]; data.cell.styles.fontStyle = 'bold'; }
+          }
+        }
+      });
+
+      // Atualiza total de páginas no rodapé após todas as páginas existirem.
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        desenharCabecalhoRodape();
+        doc.setFontSize(7.5);
+        doc.setTextColor(100, 116, 139);
+        doc.text(`Página ${i} de ${totalPages}`, pageW - margem, pageH - 5, { align: 'right' });
+      }
+
+      doc.save(`relatorio_eja_organizado_${nomeTurma}.pdf`);
+    }
+    document.addEventListener('click', ev => { if (ev.target && ev.target.id === 'btnPdf') gerarPdfOrganizado() });
+    $('btnAnalisar').addEventListener('click', async () => { const file = $('pdfFile').files[0]; if (!file) { $('status').textContent = 'Selecione o PDF do boletim.'; return } $('status').textContent = 'Lendo PDF e identificando alunos...'; $('results').classList.add('hidden'); try { const alunos = await extrairAlunos(file); if (!alunos.length) { $('status').innerHTML = '<div class="aviso">Não consegui identificar alunos no PDF. Confira se o arquivo é o boletim gerado pelo ISEDUC.</div>'; return } const dados = analisar(alunos); render(dados); $('status').textContent = `Análise concluída: ${dados.length} aluno(s) considerado(s) no relatório. ${alunosSemNotaValida.length} aluno(s) sem nota válida ou somente com zero foram listados à parte.` } catch (e) { console.error(e); $('status').innerHTML = `<div class="aviso">Erro ao analisar o PDF: ${e.message || e}</div>` } });
+
+
+    // ===== ANÁLISE ATUALIZADA: REPROVADOS E AUSÊNCIA DE NOTAS =====
+    const CAMPOS_OBRIGATORIOS = [
+      ['n1b1','N1 1ºB'], ['n2b1','N2 1ºB'], ['mb1','1ªMB'],
+      ['n1b2','N1 2ºB'], ['n2b2','N2 2ºB'], ['mb2','2ªMB'],
+      ['mm','MM'], ['mpm','MpM'], ['mfm','MFM']
+    ];
+
+    function findHeaderColumns(items, rowNums = []) {
+      const nk = v => norm(v).replace(/\s+/g,'').replace(/º|°/g,'ª');
+      const firstRowY = rowNums.length ? rowNums[0].y : null;
+      const valid = new Set(['N1','N2','1ªMB','1MB','1ªTF','1TF','2ªMB','2MB','2ªTF','2TF','MM','RM','MPM','PFM','MFM','TGF','RF']);
+      let labels = items.map(i=>({...i,key:nk(i.str)})).filter(i=>valid.has(i.key));
+      if (firstRowY !== null) {
+        const above = labels.filter(i=>i.y > firstRowY + 2 && i.y < firstRowY + 100);
+        if (above.length >= 10) labels = above;
+      }
+      labels.sort((a,b)=>a.x-b.x);
+      const n1s=labels.filter(i=>i.key==='N1');
+      const n2s=labels.filter(i=>i.key==='N2');
+      const pick=k=>labels.find(i=>i.key===k) || null;
+      const ordered=labels.filter(i=>i.x>30 && i.x<1000).sort((a,b)=>a.x-b.x);
+      function bounds(item){
+        if(!item) return null;
+        const idx=ordered.indexOf(item);
+        const prev=idx>0?ordered[idx-1]:null, next=idx>=0&&idx<ordered.length-1?ordered[idx+1]:null;
+        return {x:item.x,left:prev?(prev.x+item.x)/2:item.x-18,right:next?(item.x+next.x)/2:item.x+18};
+      }
+      return {
+        n1b1:bounds(n1s[0]), n2b1:bounds(n2s[0]), mb1:bounds(pick('1ªMB')||pick('1MB')),
+        n1b2:bounds(n1s[1]), n2b2:bounds(n2s[1]), mb2:bounds(pick('2ªMB')||pick('2MB')),
+        mm:bounds(pick('MM')), mpm:bounds(pick('MPM')), mfm:bounds(pick('MFM'))
+      };
+    }
+
+    function parseRows(items) {
+      const rowNums = items.filter(i => i.x < 35 && /^\d{1,2}$/.test(i.str)).map(i => ({ n: Number(i.str), y: i.y })).filter(r => r.n >= 1 && r.n <= 35);
+      const unique=[]; const seen=new Set(); rowNums.sort((a,b)=>a.n-b.n).forEach(r=>{if(!seen.has(r.n)){seen.add(r.n);unique.push(r)}});
+      const cols=findHeaderColumns(items,unique), rows=[];
+      for(let idx=0;idx<unique.length;idx++){
+        const r=unique[idx], next=unique[idx+1];
+        let low=r.y-8, high=r.y+8;
+        if(next){ low=Math.min(r.y,next.y)+1; high=Math.max(r.y,next.y)-1; if(Math.abs(r.y-next.y)>10){low=r.y-5;high=r.y+5;} }
+        const bandItems=items.filter(i=>i.y>=Math.min(low,high)-1&&i.y<=Math.max(low,high)+1);
+        const rowItems=items.filter(i=>Math.abs(i.y-r.y)<=4);
+        const firstColX=cols.n1b1?.x||235;
+        const disciplina=clean(bandItems.filter(i=>i.x>=35&&i.x<=Math.max(190,firstColX-25)).sort((a,b)=>Math.abs(a.y-b.y)>2?(b.y-a.y):(a.x-b.x)).map(i=>i.str).join(' '));
+        if(!disciplina||/Disciplinas/i.test(disciplina)) continue;
+        const val=k=>cols[k]?valueIn(rowItems,cols[k].left,cols[k].right):null;
+        rows.push({n:r.n,disciplina,n1b1:val('n1b1'),n2b1:val('n2b1'),mb1:val('mb1'),n1b2:val('n1b2'),n2b2:val('n2b2'),mb2:val('mb2'),mm:val('mm'),mpm:val('mpm'),mfm:val('mfm'),rf:statusIn(rowItems)});
+      }
+      return rows;
+    }
+
+    function analisar(alunos){
+      alunosIgnorados=[]; alunosSemNotaValida=[];
+      return alunos.map(a=>{
+        const administrativas=(a.rows||[]).filter(r=>ADMIN_CODES.includes(norm(r.rf)));
+        const ativas=(a.rows||[]).filter(r=>!ADMIN_CODES.includes(norm(r.rf)));
+        const apenasAdministrativo=ativas.length===0;
+        const reprovadas=ativas.filter(r=>norm(r.rf)==='RE').map(r=>nomeComponente(r.disciplina));
+        const ausencias=[]; const zeros=[];
+        ativas.forEach(r=>{
+          const faltantes=CAMPOS_OBRIGATORIOS.filter(([k])=>r[k]===null||r[k]===undefined).map(([,label])=>label);
+          if(faltantes.length) ausencias.push({disciplina:nomeComponente(r.disciplina),campos:faltantes});
+          const presentes=CAMPOS_OBRIGATORIOS.map(([k])=>r[k]).filter(v=>v!==null&&v!==undefined);
+          if(presentes.length && presentes.every(v=>Number(v)===0)) zeros.push(nomeComponente(r.disciplina));
+        });
+        const somenteZeros=ativas.length>0 && ativas.every(r=>{
+          const vals=CAMPOS_OBRIGATORIOS.map(([k])=>r[k]).filter(v=>v!==null&&v!==undefined);
+          return vals.length>0 && vals.every(v=>Number(v)===0);
+        });
+        let condicao='REGULAR';
+        if(apenasAdministrativo) condicao='ADMINISTRATIVO';
+        else if(reprovadas.length) condicao='REPROVADO';
+        else if(ausencias.length) condicao='AUSÊNCIA DE NOTA';
+        else if(somenteZeros||zeros.length) condicao='NOTAS ZERO';
+        const prioridade=!apenasAdministrativo&&(reprovadas.length>0||ausencias.length>0||somenteZeros||zeros.length>0);
+        let obs=[];
+        if(reprovadas.length) obs.push(`${reprovadas.length} componente(s) com RF = RE.`);
+        if(ausencias.length) obs.push(`${ausencias.length} componente(s) com campo obrigatório de nota em branco.`);
+        if(somenteZeros) obs.push('Todos os componentes apresentam somente notas zero.');
+        else if(zeros.length) obs.push(`${zeros.length} componente(s) apresentam somente notas zero.`);
+        if(apenasAdministrativo) obs.push(`Situação administrativa: ${[...new Set(administrativas.map(r=>norm(r.rf)).filter(Boolean))].join(', ')||'não definida'}.`);
+        if(!obs.length) obs.push('Sem reprovação ou ausência de notas identificada.');
+        return {...a,ativas,administrativas,reprovadas,ausencias,zeros,somenteZeros,apenasAdministrativo,condicao,prioridade,obs:obs.join(' ')};
+      });
+    }
+
+    function fmtAusencias(lista){return (lista||[]).map(x=>`${x.disciplina}: ${x.campos.join(', ')}`).join('\n')||'-';}
+    function fmtAusenciasPdf(lista){return (lista||[]).map(x=>`${x.disciplina} (${x.campos.join(', ')})`).join('; ')||'-';}
+    function classeCondicao(c){return c==='REPROVADO'?'risco':c==='AUSÊNCIA DE NOTA'?'atencao':c==='NOTAS ZERO'?'acima':c==='ADMINISTRATIVO'?'admin':'ok';}
+
+    function render(dados){
+      dadosGerados=dados;
+      const turma=dados.find(d=>d.turma&&d.turma!=='Turma não identificada')?.turma||'Turma não identificada';
+      const tipo=dados.find(d=>d.tipo)?.tipo||'EJA';
+      $('turmaTitulo').textContent=`TURMA: ${turma}`; $('tipoTitulo').textContent=`Tipo identificado: ${tipo}`;
+      const ativos=dados.filter(d=>!d.apenasAdministrativo), prioridade=ativos.filter(d=>d.prioridade);
+      $('totalAlunos').textContent=dados.length;
+      $('totalAtivos').textContent=ativos.length;
+      $('totalReprovados').textContent=ativos.filter(d=>d.reprovadas.length).length;
+      $('totalAusencias').textContent=ativos.filter(d=>d.ausencias.length).length;
+      $('totalZeros').textContent=ativos.filter(d=>d.somenteZeros||d.zeros.length).length;
+      $('totalRegulares').textContent=ativos.filter(d=>!d.prioridade).length;
+      $('totalAdministrativos').textContent=dados.filter(d=>d.apenasAdministrativo).length;
+      $('listaPrioridade').innerHTML=prioridade.length?`<p><strong>${prioridade.length} estudante(s) exigem conferência</strong></p><table><thead><tr><th>Estudante</th><th>Condição</th><th>Componentes reprovados</th><th>Ausências/zeros</th></tr></thead><tbody>${prioridade.map(d=>`<tr><td><strong>${d.aluno}</strong></td><td><span class="badge ${classeCondicao(d.condicao)}">${d.condicao}</span></td><td class="disciplinas">${listaComponentes(d.reprovadas)}</td><td class="disciplinas">${fmtAusencias(d.ausencias)}${d.zeros.length?'\nNotas zero: '+d.zeros.join('; '):''}</td></tr>`).join('')}</tbody></table>`:'<p><span class="badge ok">Nenhum estudante reprovado ou com ausência de nota foi identificado.</span></p>';
+      const tbody=$('tbody'); tbody.innerHTML='';
+      dados.forEach(d=>{const tr=document.createElement('tr');tr.innerHTML=`<td><strong>${d.aluno}</strong></td><td><span class="badge ${classeCondicao(d.condicao)}">${d.condicao}</span></td><td class="disciplinas">${listaComponentes(d.reprovadas)}</td><td class="disciplinas">${fmtAusencias(d.ausencias)}</td><td class="disciplinas">${d.zeros.join('\n')||'-'}</td><td>${d.obs}</td>`;tbody.appendChild(tr);});
+      $('results').classList.remove('hidden');
+    }
+
+    function gerarPdfOrganizado(){
+      if(!dadosGerados.length){alert('Antes de gerar o PDF, analise o boletim.');return;}
+      if(!window.jspdf||!window.jspdf.jsPDF||!window.jspdf.jsPDF.API.autoTable){alert('A biblioteca jsPDF/AutoTable ainda não carregou. Verifique a internet e tente novamente.');return;}
+      const {jsPDF}=window.jspdf; const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+      const pageW=doc.internal.pageSize.getWidth(), pageH=doc.internal.pageSize.getHeight(), margem=10;
+      const turma=dadosGerados.find(d=>d.turma)?.turma||'Turma não identificada'; const tipo=dadosGerados.find(d=>d.tipo)?.tipo||'EJA';
+      const nomeTurma=turma.replace(/[\\/:*?"<>|]/g,'').replace(/\s+/g,'_')||'turma';
+      const ativos=dadosGerados.filter(d=>!d.apenasAdministrativo), prioridade=ativos.filter(d=>d.prioridade);
+      function header(){doc.setFillColor(15,47,102);doc.rect(0,0,pageW,24,'F');doc.setTextColor(255);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('AnalisEJA — Reprovados e Ausência de Notas',margem,10);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text(`Turma: ${turma} | Tipo: ${tipo} | Gerado em: ${new Date().toLocaleString('pt-BR')}`,margem,17);doc.setTextColor(11,27,51);}
+      function footer(){const p=doc.internal.getCurrentPageInfo().pageNumber;doc.setFontSize(7);doc.setTextColor(100);doc.text(`Página ${p}`,pageW-margem,pageH-5,{align:'right'});doc.setTextColor(11,27,51);}
+      header(); let y=31;
+      doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Resumo geral',margem,y);y+=4;
+      doc.autoTable({startY:y,theme:'grid',head:[['Indicador','Quantidade']],body:[['Total no boletim',dadosGerados.length],['Estudantes ativos',ativos.length],['Reprovados',ativos.filter(d=>d.reprovadas.length).length],['Com ausência de nota',ativos.filter(d=>d.ausencias.length).length],['Somente notas zero',ativos.filter(d=>d.somenteZeros||d.zeros.length).length],['Sem pendências',ativos.filter(d=>!d.prioridade).length],['Situação administrativa',dadosGerados.filter(d=>d.apenasAdministrativo).length]],styles:{fontSize:9,cellPadding:2},headStyles:{fillColor:[15,47,102]},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      y=doc.lastAutoTable.finalY+8;doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Estudantes que exigem conferência',margem,y);y+=4;
+      doc.autoTable({startY:y,theme:'grid',head:[['Estudante','Condição','Componentes reprovados','Ausências de notas','Notas zero','Observação']],body:(prioridade.length?prioridade:[{aluno:'Nenhum estudante identificado.',condicao:'-',reprovadas:[],ausencias:[],zeros:[],obs:'-'}]).map(d=>[d.aluno,d.condicao,listaComponentesPdf(d.reprovadas),fmtAusenciasPdf(d.ausencias),(d.zeros||[]).join('; ')||'-',d.obs]),styles:{fontSize:7,cellPadding:1.5,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[146,64,14]},columnStyles:{0:{cellWidth:48},1:{cellWidth:30},2:{cellWidth:45},3:{cellWidth:75},4:{cellWidth:40},5:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      doc.addPage();header();doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Detalhamento completo',margem,31);
+      doc.autoTable({startY:35,theme:'grid',head:[['Estudante','Condição','Reprovados','Ausências','Notas zero','Observação']],body:dadosGerados.map(d=>[d.aluno,d.condicao,listaComponentesPdf(d.reprovadas),fmtAusenciasPdf(d.ausencias),(d.zeros||[]).join('; ')||'-',d.obs]),styles:{fontSize:6.7,cellPadding:1.3,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[15,47,102]},columnStyles:{0:{cellWidth:48},1:{cellWidth:30},2:{cellWidth:45},3:{cellWidth:75},4:{cellWidth:40},5:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      const total=doc.internal.getNumberOfPages();for(let i=1;i<=total;i++){doc.setPage(i);footer();}
+      doc.save(`analise_eja_reprovados_ausencia_${nomeTurma}.pdf`);
+    }
+
+  </script>
+</body>
+
+</html>

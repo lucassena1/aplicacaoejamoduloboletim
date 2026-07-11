@@ -724,6 +724,9 @@
       }
     }
 
+
+    .statusDisciplina{font-weight:bold;white-space:pre-line}.statusDisciplina.reprovado{color:#b91c1c}.statusDisciplina.ausente{color:#92400e}.statusDisciplina.okDisc{color:#166534}.linhaAmbas{background:#faf5ff}.linhaPort{background:#fff7ed}.linhaMat{background:#eff6ff}
+
     @media print {
       body {
         background: #fff
@@ -770,8 +773,8 @@
   <div id="vercelAviso" style="display:none;background:#fee2e2;color:#991b1b;padding:12px 16px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-weight:bold;">Erro ao carregar bibliotecas externas. Verifique a conexão e tente atualizar a página.</div>
 
   <header>
-    <h1>AnalisEJA - Reprovados e Ausência de Notas</h1>
-    <p><strong>Foco:</strong> identificar estudantes reprovados e estudantes com ausência de notas nos componentes curriculares.</p>
+    <h1>AnalisEJA - Reprovados e Ausência de Notas no 2º Bimestre</h1>
+    <p><strong>Foco:</strong> identificar estudantes reprovados e ausências de N1, N2 e 2ª Média Bimestral no 2º bimestre.</p>
     <p>Identifica automaticamente Etapa, Módulo e Alfabetiza.</p>
   </header>
   <main>
@@ -857,14 +860,14 @@
       <input id="limiteFaltas" type="hidden" value="10">
       <button id="btnAnalisar">Analisar boletim</button>
       <div id="status" class="status"></div>
-      <p class="small"><strong>Critério principal:</strong> o relatório destaca estudantes com resultado final <strong>RE — Reprovado</strong>, componentes com campos obrigatórios de nota em branco e estudantes que apresentam somente notas zero. Situações administrativas como desistência, cancelamento e transferência são separadas e não entram como ausência de nota.</p>
+      <p class="small"><strong>Critério principal:</strong> o relatório destaca estudantes com resultado final <strong>RE — Reprovado</strong> e verifica, exclusivamente no <strong>2º bimestre</strong>, a ausência de <strong>N1, N2 e 2ª Média Bimestral</strong>. Também identifica estudantes que apresentam somente notas zero nesses três campos. Situações administrativas como desistência, cancelamento e transferência são separadas e não entram como ausência de nota.</p>
     </section>
 
     <section id="results" class="hidden">
       <div id="reportArea">
         <section class="card">
-          <h1 style="margin-top:0">AnalisEJA — Reprovados e Ausência de Notas</h1>
-          <p><strong>Foco:</strong> estudantes reprovados, com notas obrigatórias ausentes ou somente com notas zero.</p>
+          <h1 style="margin-top:0">AnalisEJA — Reprovados e Ausência de Notas no 2º Bimestre</h1>
+          <p><strong>Foco:</strong> estudantes reprovados e componentes sem N1, N2 ou 2ª Média Bimestral no 2º bimestre.</p>
           <div id="turmaTitulo" class="turmaTitulo">TURMA:</div>
           <div id="tipoTitulo" class="small">Tipo:</div>
         </section>
@@ -872,29 +875,27 @@
         <section class="card destaque">
           <div class="sectionTag">PRIORIDADE</div>
           <h2>Estudantes que exigem conferência</h2>
-          <p>Relação consolidada de reprovados e estudantes com ausência total ou parcial de notas.</p>
+          <p>Relação consolidada de reprovados e estudantes com ausência de N1, N2 ou 2ª Média Bimestral no 2º bimestre.</p>
           <div id="listaPrioridade" class="faltandoBox"></div>
         </section>
 
-        <section class="card">
-          <h2>Resumo geral da turma</h2>
-          <div class="grid">
-            <div class="metric"><span>Total no boletim</span><b id="totalAlunos">0</b></div>
-            <div class="metric"><span>Estudantes ativos</span><b id="totalAtivos">0</b></div>
-            <div class="metric"><span>Reprovados</span><b id="totalReprovados">0</b></div>
-            <div class="metric"><span>Com ausência de nota</span><b id="totalAusencias">0</b></div>
-            <div class="metric"><span>Somente notas zero</span><b id="totalZeros">0</b></div>
-            <div class="metric"><span>Sem pendências</span><b id="totalRegulares">0</b></div>
-            <div class="metric"><span>Situação administrativa</span><b id="totalAdministrativos">0</b></div>
-          </div>
+        <section class="card pedagogico">
+          <div class="sectionTag">FALTAS E DESEMPENHO</div>
+          <h2>Faltas gerais e componentes abaixo de 6,0</h2>
+          <p>Apresenta a quantidade geral de faltas de cada estudante e os componentes com nota final abaixo de 6,0, incluindo a respectiva nota.</p>
+          <div id="listaFaltasNotas" class="faltandoBox"></div>
         </section>
 
-        <section class="card">
-          <h2>Detalhamento por estudante</h2>
-          <table>
-            <thead><tr><th>Estudante</th><th>Condição</th><th>Componentes reprovados</th><th>Ausências de notas</th><th>Notas zero</th><th>Observação</th></tr></thead>
-            <tbody id="tbody"></tbody>
-          </table>
+        <section class="card pedagogico" id="painelPortMat">
+          <div class="sectionTag">PRIORIDADE MÁXIMA</div>
+          <h2>Alunos reprovados ou com ausência de notas em Português e Matemática</h2>
+          <p>Relação dos estudantes que apresentam nota abaixo de 6,0 ou ausência de N1, N2 ou 2ª Média Bimestral em Língua Portuguesa e/ou Matemática. Esses componentes recebem prioridade por terem maior peso pedagógico na EJA.</p>
+          <div class="grid" style="margin:14px 0 18px">
+            <div class="metric"><span>Prioridade em Português</span><b id="totalPortugues">0</b></div>
+            <div class="metric"><span>Prioridade em Matemática</span><b id="totalMatematica">0</b></div>
+            <div class="metric purple"><span>Prioridade nas duas</span><b id="totalAmbas">0</b></div>
+          </div>
+          <div id="listaPortMat" class="faltandoBox"></div>
         </section>
       </div>
       <section class="card exportBox">
@@ -1518,9 +1519,9 @@
 
     // ===== ANÁLISE ATUALIZADA: REPROVADOS E AUSÊNCIA DE NOTAS =====
     const CAMPOS_OBRIGATORIOS = [
-      ['n1b1','N1 1ºB'], ['n2b1','N2 1ºB'], ['mb1','1ªMB'],
-      ['n1b2','N1 2ºB'], ['n2b2','N2 2ºB'], ['mb2','2ªMB'],
-      ['mm','MM'], ['mpm','MpM'], ['mfm','MFM']
+      ['n1b2','N1 do 2º bimestre'],
+      ['n2b2','N2 do 2º bimestre'],
+      ['mb2','2ª Média Bimestral']
     ];
 
     function findHeaderColumns(items, rowNums = []) {
@@ -1546,7 +1547,7 @@
       return {
         n1b1:bounds(n1s[0]), n2b1:bounds(n2s[0]), mb1:bounds(pick('1ªMB')||pick('1MB')),
         n1b2:bounds(n1s[1]), n2b2:bounds(n2s[1]), mb2:bounds(pick('2ªMB')||pick('2MB')),
-        mm:bounds(pick('MM')), mpm:bounds(pick('MPM')), mfm:bounds(pick('MFM'))
+        mm:bounds(pick('MM')), mpm:bounds(pick('MPM')), mfm:bounds(pick('MFM')), tgf:bounds(pick('TGF'))
       };
     }
 
@@ -1564,7 +1565,7 @@
         const disciplina=clean(bandItems.filter(i=>i.x>=35&&i.x<=Math.max(190,firstColX-25)).sort((a,b)=>Math.abs(a.y-b.y)>2?(b.y-a.y):(a.x-b.x)).map(i=>i.str).join(' '));
         if(!disciplina||/Disciplinas/i.test(disciplina)) continue;
         const val=k=>cols[k]?valueIn(rowItems,cols[k].left,cols[k].right):null;
-        rows.push({n:r.n,disciplina,n1b1:val('n1b1'),n2b1:val('n2b1'),mb1:val('mb1'),n1b2:val('n1b2'),n2b2:val('n2b2'),mb2:val('mb2'),mm:val('mm'),mpm:val('mpm'),mfm:val('mfm'),rf:statusIn(rowItems)});
+        rows.push({n:r.n,disciplina,n1b1:val('n1b1'),n2b1:val('n2b1'),mb1:val('mb1'),n1b2:val('n1b2'),n2b2:val('n2b2'),mb2:val('mb2'),mm:val('mm'),mpm:val('mpm'),mfm:val('mfm'),tgf:val('tgf'),rf:statusIn(rowItems)});
       }
       return rows;
     }
@@ -1587,26 +1588,33 @@
           const vals=CAMPOS_OBRIGATORIOS.map(([k])=>r[k]).filter(v=>v!==null&&v!==undefined);
           return vals.length>0 && vals.every(v=>Number(v)===0);
         });
+        const totalFaltas=ativas.reduce((s,r)=>s+Number(r.tgf||0),0);
+        const abaixo6=ativas.map(r=>{
+          const nota=r.mfm ?? r.mpm ?? r.mm ?? r.mb2 ?? r.mb1;
+          return nota!==null&&nota!==undefined&&Number(nota)<6 ? {disciplina:nomeComponente(r.disciplina),nota:Number(nota)} : null;
+        }).filter(Boolean);
         let condicao='REGULAR';
         if(apenasAdministrativo) condicao='ADMINISTRATIVO';
         else if(reprovadas.length) condicao='REPROVADO';
-        else if(ausencias.length) condicao='AUSÊNCIA DE NOTA';
+        else if(ausencias.length) condicao='AUSÊNCIA NO 2º BIMESTRE';
         else if(somenteZeros||zeros.length) condicao='NOTAS ZERO';
         const prioridade=!apenasAdministrativo&&(reprovadas.length>0||ausencias.length>0||somenteZeros||zeros.length>0);
         let obs=[];
         if(reprovadas.length) obs.push(`${reprovadas.length} componente(s) com RF = RE.`);
-        if(ausencias.length) obs.push(`${ausencias.length} componente(s) com campo obrigatório de nota em branco.`);
-        if(somenteZeros) obs.push('Todos os componentes apresentam somente notas zero.');
-        else if(zeros.length) obs.push(`${zeros.length} componente(s) apresentam somente notas zero.`);
+        if(ausencias.length) obs.push(`${ausencias.length} componente(s) com ausência de N1, N2 ou 2ª Média Bimestral no 2º bimestre.`);
+        if(somenteZeros) obs.push('Todos os componentes apresentam somente notas zero em N1, N2 e 2ª Média Bimestral do 2º bimestre.');
+        else if(zeros.length) obs.push(`${zeros.length} componente(s) apresentam somente notas zero nos campos do 2º bimestre.`);
         if(apenasAdministrativo) obs.push(`Situação administrativa: ${[...new Set(administrativas.map(r=>norm(r.rf)).filter(Boolean))].join(', ')||'não definida'}.`);
-        if(!obs.length) obs.push('Sem reprovação ou ausência de notas identificada.');
-        return {...a,ativas,administrativas,reprovadas,ausencias,zeros,somenteZeros,apenasAdministrativo,condicao,prioridade,obs:obs.join(' ')};
+        if(!obs.length) obs.push('Sem reprovação ou ausência de N1, N2 ou 2ª Média Bimestral identificada no 2º bimestre.');
+        return {...a,ativas,administrativas,reprovadas,ausencias,zeros,somenteZeros,totalFaltas,abaixo6,apenasAdministrativo,condicao,prioridade,obs:obs.join(' ')};
       });
     }
 
     function fmtAusencias(lista){return (lista||[]).map(x=>`${x.disciplina}: ${x.campos.join(', ')}`).join('\n')||'-';}
     function fmtAusenciasPdf(lista){return (lista||[]).map(x=>`${x.disciplina} (${x.campos.join(', ')})`).join('; ')||'-';}
-    function classeCondicao(c){return c==='REPROVADO'?'risco':c==='AUSÊNCIA DE NOTA'?'atencao':c==='NOTAS ZERO'?'acima':c==='ADMINISTRATIVO'?'admin':'ok';}
+    function fmtAbaixo6(lista){return (lista||[]).map(x=>`${x.disciplina} (${Number(x.nota).toFixed(1).replace('.',',')})`).join('\n')||'-';}
+    function fmtAbaixo6Pdf(lista){return (lista||[]).map(x=>`${x.disciplina} (${Number(x.nota).toFixed(1).replace('.',',')})`).join('; ')||'-';}
+    function classeCondicao(c){return c==='REPROVADO'?'risco':c==='AUSÊNCIA NO 2º BIMESTRE'?'atencao':c==='NOTAS ZERO'?'acima':c==='ADMINISTRATIVO'?'admin':'ok';}
 
     function render(dados){
       dadosGerados=dados;
@@ -1621,7 +1629,9 @@
       $('totalZeros').textContent=ativos.filter(d=>d.somenteZeros||d.zeros.length).length;
       $('totalRegulares').textContent=ativos.filter(d=>!d.prioridade).length;
       $('totalAdministrativos').textContent=dados.filter(d=>d.apenasAdministrativo).length;
-      $('listaPrioridade').innerHTML=prioridade.length?`<p><strong>${prioridade.length} estudante(s) exigem conferência</strong></p><table><thead><tr><th>Estudante</th><th>Condição</th><th>Componentes reprovados</th><th>Ausências/zeros</th></tr></thead><tbody>${prioridade.map(d=>`<tr><td><strong>${d.aluno}</strong></td><td><span class="badge ${classeCondicao(d.condicao)}">${d.condicao}</span></td><td class="disciplinas">${listaComponentes(d.reprovadas)}</td><td class="disciplinas">${fmtAusencias(d.ausencias)}${d.zeros.length?'\nNotas zero: '+d.zeros.join('; '):''}</td></tr>`).join('')}</tbody></table>`:'<p><span class="badge ok">Nenhum estudante reprovado ou com ausência de nota foi identificado.</span></p>';
+      $('listaPrioridade').innerHTML=prioridade.length?`<p><strong>${prioridade.length} estudante(s) exigem conferência</strong></p><table><thead><tr><th>Estudante</th><th>Condição</th><th>Componentes reprovados</th><th>Ausências/zeros no 2º bimestre</th></tr></thead><tbody>${prioridade.map(d=>`<tr><td><strong>${d.aluno}</strong></td><td><span class="badge ${classeCondicao(d.condicao)}">${d.condicao}</span></td><td class="disciplinas">${listaComponentes(d.reprovadas)}</td><td class="disciplinas">${fmtAusencias(d.ausencias)}${d.zeros.length?'\nNotas zero: '+d.zeros.join('; '):''}</td></tr>`).join('')}</tbody></table>`:'<p><span class="badge ok">Nenhum estudante reprovado ou com ausência de N1, N2 ou 2ª Média Bimestral foi identificado.</span></p>';
+      const comFaltasOuAbaixo=ativos.filter(d=>Number(d.totalFaltas||0)>0||(d.abaixo6||[]).length);
+      $('listaFaltasNotas').innerHTML=comFaltasOuAbaixo.length?`<p><strong>${comFaltasOuAbaixo.length} estudante(s) com registro de faltas ou componente abaixo de 6,0</strong></p><table><thead><tr><th>Estudante</th><th>Quantidade geral de faltas</th><th>Componentes abaixo de 6,0</th></tr></thead><tbody>${comFaltasOuAbaixo.map(d=>`<tr><td><strong>${d.aluno}</strong></td><td style="text-align:center;font-weight:bold">${Number(d.totalFaltas||0)}</td><td class="disciplinas">${fmtAbaixo6(d.abaixo6)}</td></tr>`).join('')}</tbody></table>`:'<p><span class="badge ok">Nenhum estudante com faltas ou componente abaixo de 6,0 foi identificado.</span></p>';
       const tbody=$('tbody'); tbody.innerHTML='';
       dados.forEach(d=>{const tr=document.createElement('tr');tr.innerHTML=`<td><strong>${d.aluno}</strong></td><td><span class="badge ${classeCondicao(d.condicao)}">${d.condicao}</span></td><td class="disciplinas">${listaComponentes(d.reprovadas)}</td><td class="disciplinas">${fmtAusencias(d.ausencias)}</td><td class="disciplinas">${d.zeros.join('\n')||'-'}</td><td>${d.obs}</td>`;tbody.appendChild(tr);});
       $('results').classList.remove('hidden');
@@ -1635,17 +1645,110 @@
       const turma=dadosGerados.find(d=>d.turma)?.turma||'Turma não identificada'; const tipo=dadosGerados.find(d=>d.tipo)?.tipo||'EJA';
       const nomeTurma=turma.replace(/[\\/:*?"<>|]/g,'').replace(/\s+/g,'_')||'turma';
       const ativos=dadosGerados.filter(d=>!d.apenasAdministrativo), prioridade=ativos.filter(d=>d.prioridade);
-      function header(){doc.setFillColor(15,47,102);doc.rect(0,0,pageW,24,'F');doc.setTextColor(255);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('AnalisEJA — Reprovados e Ausência de Notas',margem,10);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text(`Turma: ${turma} | Tipo: ${tipo} | Gerado em: ${new Date().toLocaleString('pt-BR')}`,margem,17);doc.setTextColor(11,27,51);}
+      function header(){doc.setFillColor(15,47,102);doc.rect(0,0,pageW,24,'F');doc.setTextColor(255);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('AnalisEJA — Reprovados e Ausência de Notas no 2º Bimestre',margem,10);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text(`Turma: ${turma} | Tipo: ${tipo} | Gerado em: ${new Date().toLocaleString('pt-BR')}`,margem,17);doc.setTextColor(11,27,51);}
       function footer(){const p=doc.internal.getCurrentPageInfo().pageNumber;doc.setFontSize(7);doc.setTextColor(100);doc.text(`Página ${p}`,pageW-margem,pageH-5,{align:'right'});doc.setTextColor(11,27,51);}
       header(); let y=31;
       doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Resumo geral',margem,y);y+=4;
-      doc.autoTable({startY:y,theme:'grid',head:[['Indicador','Quantidade']],body:[['Total no boletim',dadosGerados.length],['Estudantes ativos',ativos.length],['Reprovados',ativos.filter(d=>d.reprovadas.length).length],['Com ausência de nota',ativos.filter(d=>d.ausencias.length).length],['Somente notas zero',ativos.filter(d=>d.somenteZeros||d.zeros.length).length],['Sem pendências',ativos.filter(d=>!d.prioridade).length],['Situação administrativa',dadosGerados.filter(d=>d.apenasAdministrativo).length]],styles:{fontSize:9,cellPadding:2},headStyles:{fillColor:[15,47,102]},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
-      y=doc.lastAutoTable.finalY+8;doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Estudantes que exigem conferência',margem,y);y+=4;
-      doc.autoTable({startY:y,theme:'grid',head:[['Estudante','Condição','Componentes reprovados','Ausências de notas','Notas zero','Observação']],body:(prioridade.length?prioridade:[{aluno:'Nenhum estudante identificado.',condicao:'-',reprovadas:[],ausencias:[],zeros:[],obs:'-'}]).map(d=>[d.aluno,d.condicao,listaComponentesPdf(d.reprovadas),fmtAusenciasPdf(d.ausencias),(d.zeros||[]).join('; ')||'-',d.obs]),styles:{fontSize:7,cellPadding:1.5,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[146,64,14]},columnStyles:{0:{cellWidth:48},1:{cellWidth:30},2:{cellWidth:45},3:{cellWidth:75},4:{cellWidth:40},5:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      doc.autoTable({startY:y,theme:'grid',head:[['Indicador','Quantidade']],body:[['Total no boletim',dadosGerados.length],['Estudantes ativos',ativos.length],['Reprovados',ativos.filter(d=>d.reprovadas.length).length],['Com ausência de N1/N2/Média',ativos.filter(d=>d.ausencias.length).length],['Somente notas zero',ativos.filter(d=>d.somenteZeros||d.zeros.length).length],['Sem pendências',ativos.filter(d=>!d.prioridade).length],['Situação administrativa',dadosGerados.filter(d=>d.apenasAdministrativo).length]],styles:{fontSize:9,cellPadding:2},headStyles:{fillColor:[15,47,102]},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      y=doc.lastAutoTable.finalY+8;doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Estudantes que exigem conferência — 2º bimestre',margem,y);y+=4;
+      doc.autoTable({startY:y,theme:'grid',head:[['Estudante','Condição','Componentes reprovados','Ausências no 2º bimestre','Notas zero','Observação']],body:(prioridade.length?prioridade:[{aluno:'Nenhum estudante identificado.',condicao:'-',reprovadas:[],ausencias:[],zeros:[],obs:'-'}]).map(d=>[d.aluno,d.condicao,listaComponentesPdf(d.reprovadas),fmtAusenciasPdf(d.ausencias),(d.zeros||[]).join('; ')||'-',d.obs]),styles:{fontSize:7,cellPadding:1.5,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[146,64,14]},columnStyles:{0:{cellWidth:48},1:{cellWidth:30},2:{cellWidth:45},3:{cellWidth:75},4:{cellWidth:40},5:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      y=doc.lastAutoTable.finalY+8;
+      if(y>pageH-35){doc.addPage();header();y=31;}
+      doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Faltas gerais e componentes abaixo de 6,0',margem,y);y+=4;
+      const faltasNotas=ativos.filter(d=>Number(d.totalFaltas||0)>0||(d.abaixo6||[]).length);
+      doc.autoTable({startY:y,theme:'grid',head:[['Estudante','Quantidade geral de faltas','Componentes abaixo de 6,0']],body:(faltasNotas.length?faltasNotas:[{aluno:'Nenhum estudante identificado.',totalFaltas:0,abaixo6:[]}]).map(d=>[d.aluno,String(Number(d.totalFaltas||0)),fmtAbaixo6Pdf(d.abaixo6)]),styles:{fontSize:7.5,cellPadding:1.6,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[15,118,110]},columnStyles:{0:{cellWidth:75},1:{cellWidth:42,halign:'center'},2:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
       doc.addPage();header();doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Detalhamento completo',margem,31);
-      doc.autoTable({startY:35,theme:'grid',head:[['Estudante','Condição','Reprovados','Ausências','Notas zero','Observação']],body:dadosGerados.map(d=>[d.aluno,d.condicao,listaComponentesPdf(d.reprovadas),fmtAusenciasPdf(d.ausencias),(d.zeros||[]).join('; ')||'-',d.obs]),styles:{fontSize:6.7,cellPadding:1.3,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[15,47,102]},columnStyles:{0:{cellWidth:48},1:{cellWidth:30},2:{cellWidth:45},3:{cellWidth:75},4:{cellWidth:40},5:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      doc.autoTable({startY:35,theme:'grid',head:[['Estudante','Condição','Reprovados','Ausências no 2º bimestre','Notas zero','Observação']],body:dadosGerados.map(d=>[d.aluno,d.condicao,listaComponentesPdf(d.reprovadas),fmtAusenciasPdf(d.ausencias),(d.zeros||[]).join('; ')||'-',d.obs]),styles:{fontSize:6.7,cellPadding:1.3,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[15,47,102]},columnStyles:{0:{cellWidth:48},1:{cellWidth:30},2:{cellWidth:45},3:{cellWidth:75},4:{cellWidth:40},5:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
       const total=doc.internal.getNumberOfPages();for(let i=1;i<=total;i++){doc.setPage(i);footer();}
-      doc.save(`analise_eja_reprovados_ausencia_${nomeTurma}.pdf`);
+      doc.save(`analise_eja_2_bimestre_${nomeTurma}.pdf`);
+    }
+
+
+    // ===== VERSÃO FINAL: PRIORIDADE EM PORTUGUÊS E MATEMÁTICA =====
+    function localizarDisciplina(d, termo){
+      return (d.ativas||[]).find(r=>norm(nomeComponente(r.disciplina)).includes(termo));
+    }
+    function analisarDisciplinaPrioritaria(d, termo){
+      const r=localizarDisciplina(d, termo);
+      if(!r) return {encontrada:false, prioridade:false, nota:null, ausencias:['Componente não localizado'], texto:'Componente não localizado'};
+      const aus=[];
+      if(r.n1b2===null||r.n1b2===undefined) aus.push('N1');
+      if(r.n2b2===null||r.n2b2===undefined) aus.push('N2');
+      if(r.mb2===null||r.mb2===undefined) aus.push('2ª média');
+      const nota=r.mb2;
+      const abaixo=nota!==null&&nota!==undefined&&Number(nota)<6;
+      const reprovado=norm(r.rf)==='RE';
+      const prioridade=aus.length>0||abaixo||reprovado;
+      let partes=[];
+      if(aus.length) partes.push('Ausência: '+aus.join(', '));
+      if(nota!==null&&nota!==undefined) partes.push('2ª média: '+fmtNota(nota));
+      if(reprovado) partes.push('RF = RE');
+      if(!partes.length) partes.push('Sem pendência');
+      return {encontrada:true, prioridade, nota, ausencias:aus, abaixo, reprovado, texto:partes.join(' | ')};
+    }
+    function dadosPortMat(dados){
+      return dados.filter(d=>!d.apenasAdministrativo).map(d=>{
+        const portugues=analisarDisciplinaPrioritaria(d,'LINGUA PORTUGUESA');
+        const matematica=analisarDisciplinaPrioritaria(d,'MATEMATICA');
+        let situacao='SEM PENDÊNCIA';
+        if(portugues.prioridade&&matematica.prioridade) situacao='PORTUGUÊS E MATEMÁTICA';
+        else if(portugues.prioridade) situacao='PORTUGUÊS';
+        else if(matematica.prioridade) situacao='MATEMÁTICA';
+        return {aluno:d.aluno, portugues, matematica, situacao, prioridade:portugues.prioridade||matematica.prioridade};
+      }).filter(x=>x.prioridade);
+    }
+    function classeLinhaPM(s){return s==='PORTUGUÊS E MATEMÁTICA'?'linhaAmbas':s==='PORTUGUÊS'?'linhaPort':'linhaMat';}
+    function classeTextoPM(info){return info.ausencias.length?'ausente':(info.abaixo||info.reprovado)?'reprovado':'okDisc';}
+
+    function render(dados){
+      dadosGerados=dados;
+      const turma=dados.find(d=>d.turma&&d.turma!=='Turma não identificada')?.turma||'Turma não identificada';
+      const tipo=dados.find(d=>d.tipo)?.tipo||'EJA';
+      $('turmaTitulo').textContent=`TURMA: ${turma}`;
+      $('tipoTitulo').textContent=`Tipo identificado: ${tipo}`;
+
+      const ativos=dados.filter(d=>!d.apenasAdministrativo);
+      const prioridade=ativos.filter(d=>d.prioridade);
+      $('listaPrioridade').innerHTML=prioridade.length?`<p><strong>${prioridade.length} estudante(s) exigem conferência</strong></p><table><thead><tr><th>Estudante</th><th>Condição</th><th>Componentes reprovados</th><th>Ausências/zeros no 2º bimestre</th></tr></thead><tbody>${prioridade.map(d=>`<tr><td><strong>${d.aluno}</strong></td><td><span class="badge ${classeCondicao(d.condicao)}">${d.condicao}</span></td><td class="disciplinas">${listaComponentes(d.reprovadas)}</td><td class="disciplinas">${fmtAusencias(d.ausencias)}${d.zeros.length?'\nNotas zero: '+d.zeros.join('; '):''}</td></tr>`).join('')}</tbody></table>`:'<p><span class="badge ok">Nenhum estudante reprovado ou com ausência de N1, N2 ou 2ª Média Bimestral foi identificado.</span></p>';
+
+      const comFaltasOuAbaixo=ativos.filter(d=>Number(d.totalFaltas||0)>0||(d.abaixo6||[]).length);
+      $('listaFaltasNotas').innerHTML=comFaltasOuAbaixo.length?`<p><strong>${comFaltasOuAbaixo.length} estudante(s) com registro de faltas ou componente abaixo de 6,0</strong></p><table><thead><tr><th>Estudante</th><th>Quantidade geral de faltas</th><th>Componentes abaixo de 6,0</th></tr></thead><tbody>${comFaltasOuAbaixo.map(d=>`<tr><td><strong>${d.aluno}</strong></td><td style="text-align:center;font-weight:bold">${Number(d.totalFaltas||0)}</td><td class="disciplinas">${fmtAbaixo6(d.abaixo6)}</td></tr>`).join('')}</tbody></table>`:'<p><span class="badge ok">Nenhum estudante com faltas ou componente abaixo de 6,0 foi identificado.</span></p>';
+
+      const pm=dadosPortMat(dados);
+      const qtdPort=pm.filter(x=>x.portugues.prioridade).length;
+      const qtdMat=pm.filter(x=>x.matematica.prioridade).length;
+      const qtdAmbas=pm.filter(x=>x.portugues.prioridade&&x.matematica.prioridade).length;
+      $('totalPortugues').textContent=qtdPort;
+      $('totalMatematica').textContent=qtdMat;
+      $('totalAmbas').textContent=qtdAmbas;
+      $('listaPortMat').innerHTML=pm.length?`<p><strong>${pm.length} estudante(s) em prioridade pedagógica</strong></p><table><thead><tr><th>Estudante</th><th>Língua Portuguesa</th><th>Matemática</th><th>Situação</th></tr></thead><tbody>${pm.map(x=>`<tr class="${classeLinhaPM(x.situacao)}"><td><strong>${x.aluno}</strong></td><td><span class="statusDisciplina ${classeTextoPM(x.portugues)}">${x.portugues.texto}</span></td><td><span class="statusDisciplina ${classeTextoPM(x.matematica)}">${x.matematica.texto}</span></td><td><span class="badge ${x.situacao==='PORTUGUÊS E MATEMÁTICA'?'acima':'risco'}">${x.situacao}</span></td></tr>`).join('')}</tbody></table>`:'<p><span class="badge ok">Nenhum estudante com reprovação, nota abaixo de 6,0 ou ausência de N1, N2 ou 2ª Média em Português e Matemática.</span></p>';
+      $('results').classList.remove('hidden');
+    }
+
+    function gerarPdfOrganizado(){
+      if(!dadosGerados.length){alert('Antes de gerar o PDF, analise o boletim.');return;}
+      if(!window.jspdf||!window.jspdf.jsPDF){alert('A biblioteca jsPDF ainda não carregou. Verifique a internet e tente novamente.');return;}
+      const {jsPDF}=window.jspdf; const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+      if(typeof doc.autoTable!=='function'){alert('A biblioteca AutoTable ainda não carregou. Verifique a internet e tente novamente.');return;}
+      const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight(),margem=10;
+      const turma=dadosGerados.find(d=>d.turma)?.turma||'Turma não identificada';
+      const tipo=dadosGerados.find(d=>d.tipo)?.tipo||'EJA';
+      const nomeTurma=turma.replace(/[\\/:*?"<>|]/g,'').replace(/\s+/g,'_')||'turma';
+      const ativos=dadosGerados.filter(d=>!d.apenasAdministrativo), prioridade=ativos.filter(d=>d.prioridade), pm=dadosPortMat(dadosGerados);
+      function header(){doc.setFillColor(15,47,102);doc.rect(0,0,pageW,24,'F');doc.setTextColor(255);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('AnalisEJA — Prioridades do 2º Bimestre',margem,10);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text(`Turma: ${turma} | Tipo: ${tipo} | Gerado em: ${new Date().toLocaleString('pt-BR')}`,margem,17);doc.setTextColor(11,27,51);}
+      function footer(){const p=doc.internal.getCurrentPageInfo().pageNumber;doc.setFontSize(7);doc.setTextColor(100);doc.text(`Página ${p}`,pageW-margem,pageH-5,{align:'right'});doc.setTextColor(11,27,51);}
+      header(); let y=31;
+      doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Alunos prioritários — Português e Matemática',margem,y);y+=4;
+      doc.autoTable({startY:y,theme:'grid',head:[['Estudante','Língua Portuguesa','Matemática','Situação']],body:(pm.length?pm:[{aluno:'Nenhum estudante identificado.',portugues:{texto:'-'},matematica:{texto:'-'},situacao:'-'}]).map(x=>[x.aluno,x.portugues.texto,x.matematica.texto,x.situacao]),styles:{fontSize:7.5,cellPadding:1.7,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[126,34,206]},columnStyles:{0:{cellWidth:70},1:{cellWidth:75},2:{cellWidth:75},3:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      y=doc.lastAutoTable.finalY+8;if(y>pageH-35){doc.addPage();header();y=31;}
+      doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Estudantes que exigem conferência',margem,y);y+=4;
+      doc.autoTable({startY:y,theme:'grid',head:[['Estudante','Condição','Componentes reprovados','Ausências no 2º bimestre','Notas zero']],body:(prioridade.length?prioridade:[{aluno:'Nenhum estudante identificado.',condicao:'-',reprovadas:[],ausencias:[],zeros:[]}]).map(d=>[d.aluno,d.condicao,listaComponentesPdf(d.reprovadas),fmtAusenciasPdf(d.ausencias),(d.zeros||[]).join('; ')||'-']),styles:{fontSize:7,cellPadding:1.5,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[146,64,14]},columnStyles:{0:{cellWidth:55},1:{cellWidth:34},2:{cellWidth:55},3:{cellWidth:90},4:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      y=doc.lastAutoTable.finalY+8;if(y>pageH-35){doc.addPage();header();y=31;}
+      doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Faltas gerais e componentes abaixo de 6,0',margem,y);y+=4;
+      const faltasNotas=ativos.filter(d=>Number(d.totalFaltas||0)>0||(d.abaixo6||[]).length);
+      doc.autoTable({startY:y,theme:'grid',head:[['Estudante','Quantidade geral de faltas','Componentes abaixo de 6,0']],body:(faltasNotas.length?faltasNotas:[{aluno:'Nenhum estudante identificado.',totalFaltas:0,abaixo6:[]}]).map(d=>[d.aluno,String(Number(d.totalFaltas||0)),fmtAbaixo6Pdf(d.abaixo6)]),styles:{fontSize:7.5,cellPadding:1.6,overflow:'linebreak',valign:'top'},headStyles:{fillColor:[15,118,110]},columnStyles:{0:{cellWidth:75},1:{cellWidth:42,halign:'center'},2:{cellWidth:'auto'}},margin:{left:margem,right:margem,top:28,bottom:12},didDrawPage:()=>{header();footer();}});
+      const total=doc.internal.getNumberOfPages();for(let i=1;i<=total;i++){doc.setPage(i);footer();}
+      doc.save(`analise_eja_portugues_matematica_${nomeTurma}.pdf`);
     }
 
   </script>

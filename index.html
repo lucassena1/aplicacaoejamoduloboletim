@@ -1337,7 +1337,6 @@
       const tipo = dadosGerados.find(d => d.tipo)?.tipo || 'EJA';
       const nomeTurma = turma.replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '_') || 'turma';
       const mediaMinima = MEDIA_MINIMA_APROVACAO;
-      const limiteFaltas = LIMITE_FALTAS_ATENCAO;
       const ativos = dadosGerados.filter(d => d.situacao !== 'ADMIN');
 
       function safeText(v) { return String(v ?? '-').replace(/\s+/g, ' ').trim() || '-'; }
@@ -1414,7 +1413,7 @@
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       doc.setTextColor(11, 27, 51);
-      doc.text(`Relatório completo gerado em ${dataHora}. Média de aprovação: ${safeNota(mediaMinima)}. Limite de faltas em atenção: ${limiteFaltas}.`, margem, y);
+      doc.text(`Relatório completo gerado em ${dataHora}. Média de aprovação: ${safeNota(mediaMinima)}.`, margem, y);
       y += 4;
 
       const resumo = [

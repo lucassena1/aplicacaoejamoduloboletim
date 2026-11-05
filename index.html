@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Análise EJA - Carência de Notas</title>
+  <title>Análise EJA - N1 do 4º Bimestre e Médias do 3º Trimestre</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -770,8 +770,8 @@
   <div id="vercelAviso" style="display:none;background:#fee2e2;color:#991b1b;padding:12px 16px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-weight:bold;">Erro ao carregar bibliotecas externas. Verifique a conexão e tente atualizar a página.</div>
 
   <header>
-    <h1>Análise EJA - Carência de Notas</h1>
-    <p><strong>Foco de novembro:</strong> acompanhar a N1 do 2º bimestre da EJA Modular e identificar, separadamente, notas abaixo da média na 1ªMB do 1º bimestre.</p>
+    <h1>Análise EJA - N1 do 4º Bimestre e Médias do 3º Trimestre</h1>
+    <p><strong>Foco de novembro:</strong> acompanhar a N1 do 4º bimestre e verificar as médias incompletas ou abaixo de 6,0 para recuperação no 3º trimestre.</p>
     <p>Identifica automaticamente Etapa, Módulo e Alfabetiza.</p>
   </header>
   <main>
@@ -804,7 +804,7 @@
           <div class="julhoHeader">
             <div>
               <h4>Novembro em destaque</h4>
-              <p>Foco: N1 do 2º bimestre da EJA Modular</p>
+              <p>Foco: N1 do 4º bimestre</p>
             </div>
             <span class="tagAtual">MÊS EM DESTAQUE</span>
           </div>
@@ -812,11 +812,11 @@
           <div class="julhoEventos julhoEventos">
             <div class="eventoJulho alerta">
               <div class="data">10 a 14</div>
-              <div class="info"><strong>N1 - 1ª Avaliação mensal do 2º Bimestre (EJA Modular)</strong><span>Período de aplicação da avaliação usada como referência para o acompanhamento atual.</span></div>
+              <div class="info"><strong>N1 - 1ª Avaliação mensal do 4º Bimestre</strong><span>Período de aplicação da avaliação em foco no acompanhamento atual.</span></div>
             </div>
             <div class="eventoJulho alerta">
               <div class="data">10 a 14</div>
-              <div class="info"><strong>N1 - 1ª Avaliação mensal do 4º Bimestre</strong><span>Avaliação do 4º bimestre da oferta anual.</span></div>
+              <div class="info"><strong>N1 - 1ª Avaliação mensal do 2º Bimestre (EJA Modular)</strong><span>Avaliação do 2º bimestre da EJA Modular.</span></div>
             </div>
             <div class="eventoJulho final">
               <div class="data">16 a 19</div>
@@ -840,7 +840,7 @@
             </div>
           </div>
 
-          <div class="julhoResumo"><strong>Resumo:</strong> em novembro, o foco da EJA Modular é a N1 do 2º bimestre, aplicada de 10 a 14. A análise das notas abaixo da média continua tomando exclusivamente a 1ªMB do 1º bimestre; a N1 do 2º bimestre é acompanhada separadamente.</div>
+          <div class="julhoResumo"><strong>Resumo:</strong> em novembro, o foco é a N1 do 4º bimestre, aplicada de 10 a 14. As médias para recuperação no 3º trimestre seguem o critério da imagem: (1ªMTF + 2ªMTF) ÷ 2, com média mínima 6,0.</div>
         </div>
       </div>
     </section>
@@ -851,14 +851,14 @@
       <input id="filtro" type="hidden" value="TODOS">
       <button id="btnAnalisar">Analisar boletim</button>
       <div id="status" class="status"></div>
-      <p class="small">Critério: a aplicação verifica os lançamentos da <strong>N1 do 2º bimestre</strong> e da <strong>1ªMB do 1º bimestre</strong>. A lista de notas abaixo da média usa somente a 1ªMB; não substitui valores ausentes por N1 do 1º bimestre. A N1 do 2º bimestre aparece como acompanhamento separado. Alunos sem nota válida ou somente com zero ficam listados à parte.</p>
+      <p class="small">Critério: a aplicação acompanha a <strong>N1 do 4º bimestre</strong>. Para a recuperação do 3º trimestre, calcula <strong>(1ªMTF + 2ªMTF) ÷ 2</strong>; média abaixo de 6,0 indica recuperação e ausência de uma das duas notas é marcada como incompleta. Se o boletim não trouxer as colunas MTF, o relatório informa que não há dados para esse cálculo. Alunos sem nota válida ou somente com zero ficam listados à parte.</p>
     </section>
 
     <section id="results" class="hidden">
       <div id="reportArea">
         <section class="card">
           <h1 style="margin-top:0">Análise EJA - Boletins Bimestrais</h1>
-          <p><strong>Foco:</strong> acompanhamento da N1 do 2º bimestre e identificação das notas abaixo da média na 1ªMB do 1º bimestre.</p>
+          <p><strong>Foco:</strong> N1 do 4º bimestre e carências de média para recuperação no 3º trimestre.</p>
           <div id="turmaTitulo" class="turmaTitulo">TURMA:</div>
           <div id="tipoTitulo" class="small">Tipo:</div>
         </section>
@@ -866,7 +866,7 @@
         <section class="card destaque" id="relatorioPendencias">
           <div class="sectionTag">RELATÓRIO ACIMA</div>
           <h2>Alunos com carência de notas</h2>
-          <p>Lista de alunos com falta de lançamento em 1ªMB do 1º bimestre e/ou N1 do 2º bimestre.</p>
+          <p>Lista de alunos com falta de lançamento na N1 do 4º bimestre.</p>
           <div id="listaPendencias" class="faltandoBox"></div>
         </section>
         <section class="card alertaNm3" id="relatorioSemNotaValida">
@@ -876,10 +876,30 @@
           <div id="listaSemNotaValida" class="faltandoBox"></div>
         </section>
         <section class="card destaque" id="relatorioAbaixoMedia">
-          <div class="sectionTag">1º BIMESTRE</div>
-          <h2>Alunos com 1ªMB abaixo da média</h2>
-          <p>Considera somente a média bimestral (1ªMB), comparada à média de aprovação fixa de 6,0.</p>
+          <div class="sectionTag">4º BIMESTRE</div>
+          <h2>Alunos com N1 do 4º bimestre abaixo de 6,0</h2>
+          <p>Identifica os estudantes e componentes com nota N1 inferior à média de aprovação.</p>
+          <div id="avisoN1B4" class="aviso"></div>
           <div id="listaAbaixoMedia"></div>
+        </section>
+        <section class="card" id="rankingFaltas">
+          <h2>Ranking de faltas</h2>
+          <p>Alunos ordenados da maior para a menor quantidade total de faltas registrada no boletim.</p>
+          <div id="listaRankingFaltas"></div>
+        </section>
+
+        <section class="card destaque" id="relatorioMediaTrimestre">
+          <div class="sectionTag">RECUPERAÇÃO NO 3º TRIMESTRE</div>
+          <h2>Médias parciais do 3º trimestre</h2>
+          <p>Regra: (1ªMTF + 2ªMTF) ÷ 2. Médias abaixo de 6,0 ficam em recuperação; se faltar um dos valores, a média fica incompleta.</p>
+          <div class="grid">
+            <div class="metric"><span>Alunos com média abaixo de 6</span><b id="totalMedia3Abaixo">0</b></div>
+            <div class="metric"><span>Disciplinas abaixo de 6</span><b id="totalComp3Abaixo">0</b></div>
+            <div class="metric"><span>Médias calculadas</span><b id="totalMedia3Calculadas">0</b></div>
+            <div class="metric"><span>Médias incompletas</span><b id="totalMedia3Incompletas">0</b></div>
+          </div>
+          <div id="avisoMediaTrimestre" class="aviso"></div>
+          <div id="listaMediaTrimestre"></div>
         </section>
 
         <section class="card">
@@ -890,10 +910,9 @@
             <div class="metric"><span>Críticos</span><b id="totalCriticos">0</b></div>
             <div class="metric"><span>Atenção</span><b id="totalAtencao">0</b></div>
             <div class="metric"><span>Regulares</span><b id="totalRegulares">0</b></div>
-            <div class="metric"><span>Disciplinas em risco</span><b id="totalAbaixo6">0</b></div>
+            <div class="metric"><span>Disciplinas com N1 4ºB abaixo de 6</span><b id="totalAbaixo6">0</b></div>
             <div class="metric"><span>Faltas em risco</span><b id="totalFaltasRisco">0</b></div>
-            <div class="metric"><span>Sem 1ªMB</span><b id="totalSem1MB">0</b></div>
-            <div class="metric"><span>Sem N1 2ºB</span><b id="totalSemN1B2">0</b></div>
+            <div class="metric"><span>Sem N1 4ºB</span><b id="totalSemN1B4">0</b></div>
           </div>
         </section>
 
@@ -921,12 +940,6 @@
           <div id="tabelaDificuldades"></div>
         </section>
 
-        <section class="card" id="rankingFaltas">
-          <h2>Ranking de faltas</h2>
-          <p>Alunos ordenados da maior para a menor quantidade total de faltas registrada no boletim.</p>
-          <div id="listaRankingFaltas"></div>
-        </section>
-
         <section class="card">
           <h2>Detalhamento por aluno</h2>
           <table>
@@ -934,9 +947,8 @@
               <tr>
                 <th>Aluno</th>
                 <th>Situação</th>
-                <th>1ªMB</th>
-                <th>N1 2ºB</th>
-                <th>Disciplinas em risco</th>
+                <th>N1 4ºB lançadas</th>
+                <th>Disciplinas abaixo de 6,0</th>
                 <th>Faltas em risco</th>
                 <th>Observação</th>
               </tr>
@@ -1012,18 +1024,17 @@
     function findHeaderColumns(items, rowNums = []) {
       const n = v => norm(v).replace(/\s+/g, '');
       const firstRowY = rowNums.length ? rowNums[0].y : null;
-      const labelSet = new Set(['N1', 'N2', '1ªMB', '1ºMB', '1°MB', '1MB', '1ªTF', '1ºTF', '1°TF', '2ªMB', '2ºMB', '2°MB', '2MB', '2ªTF', '2ºTF', '2°TF', '2TF']);
+      const headerPattern = /^(?:N1|N2|[1-4][ªº°]?(?:MB|TF|MS|RS|MSF|MTF)|[12][ªº°]?(?:MS|RS|MSF|MTF))$/;
       let labels = items
-        .filter(i => labelSet.has(n(i.str)) || /^1[ªº°]?MB$/.test(n(i.str)) || /^1[ªº°]?TF$/.test(n(i.str)) || /^2[ªº°]?MB$/.test(n(i.str)) || /^2[ªº°]?TF$/.test(n(i.str)))
+        .filter(i => headerPattern.test(n(i.str)))
         .map(i => ({ ...i, key: n(i.str) }));
 
-      // Evita pegar as siglas da legenda do rodapé. As colunas corretas ficam acima da 1ª linha de disciplina.
+      // Mantém os cabeçalhos da tabela e evita as siglas repetidas na legenda do rodapé.
       if (firstRowY !== null) {
         const acima = labels.filter(i => i.y > firstRowY + 2 && i.y < firstRowY + 90);
         if (acima.length >= 6) labels = acima;
       }
 
-      // Agrupa por linhas horizontais e usa a linha com a sequência maior de cabeçalhos da tabela.
       const grupos = [];
       labels.sort((a, b) => b.y - a.y || a.x - b.x).forEach(it => {
         let g = grupos.find(g => Math.abs(g.y - it.y) <= 5);
@@ -1033,30 +1044,25 @@
       grupos.forEach(g => g.items.sort((a, b) => a.x - b.x));
       grupos.sort((a, b) => b.items.length - a.items.length || b.y - a.y);
       const header = grupos[0]?.items || labels.sort((a, b) => a.x - b.x);
-
-      // A ordem esperada é: N1, N2, 1ªMB, 1ªTF, N1, N2, 2ªMB, 2ªTF.
-      const mb1Item = header.find(i => /^1[ªº°]?MB$/.test(i.key));
-      let n1b1Item = null;
-      let n1b2Item = null;
-      if (mb1Item) {
-        const antes = header.filter(i => i.key === 'N1' && i.x < mb1Item.x).sort((a, b) => a.x - b.x);
-        n1b1Item = antes[0] || null;
-        const depois = header.filter(i => i.key === 'N1' && i.x > mb1Item.x + 10).sort((a, b) => a.x - b.x);
-        n1b2Item = depois[0] || null;
-      }
-
-      function boundsFor(centerItem) {
+      const boundsFor = centerItem => {
         if (!centerItem) return null;
         const all = header.filter(i => i.x > 30 && i.x < 900).sort((a, b) => a.x - b.x);
         const idx = all.findIndex(i => i === centerItem || (Math.abs(i.x - centerItem.x) < 0.1 && Math.abs(i.y - centerItem.y) < 0.1 && i.key === centerItem.key));
         const prev = idx > 0 ? all[idx - 1] : null;
         const next = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
-        const left = prev ? (prev.x + centerItem.x) / 2 : centerItem.x - 18;
-        const right = next ? (centerItem.x + next.x) / 2 : centerItem.x + 18;
-        return { x: centerItem.x, left, right };
-      }
-
-      return { n1b1: boundsFor(n1b1Item), mb1: boundsFor(mb1Item), n1b2: boundsFor(n1b2Item) };
+        return { x: centerItem.x, left: prev ? (prev.x + centerItem.x) / 2 : centerItem.x - 18, right: next ? (centerItem.x + next.x) / 2 : centerItem.x + 18 };
+      };
+      const n1s = header.filter(i => i.key === 'N1').sort((a, b) => a.x - b.x);
+      const find = key => header.find(i => i.key === key) || null;
+      const mtf1 = find('1ªMTF') || find('1ºMTF') || find('1°MTF');
+      const mtf2 = find('2ªMTF') || find('2ºMTF') || find('2°MTF');
+      return {
+        n1b1: boundsFor(n1s[0]), n1b2: boundsFor(n1s[1]), n1b3: boundsFor(n1s[2]), n1b4: boundsFor(n1s[3]),
+        mb1: boundsFor(find('1ªMB') || find('1ºMB') || find('1°MB')),
+        mtf1: boundsFor(mtf1), mtf2: boundsFor(mtf2),
+        mtfDisponivel: Boolean(mtf1 && mtf2),
+        msfDisponivel: Boolean(find('1ªMSF') || find('1ºMSF') || find('1°MSF') || find('2ªMSF') || find('2ºMSF') || find('2°MSF'))
+      };
     }
     function parseRows(items) {
       const rowNums = items.filter(i => i.x < 35 && /^\d{1,2}$/.test(i.str)).map(i => ({ n: Number(i.str), y: i.y })).filter(r => r.n >= 1 && r.n <= 35);
@@ -1072,7 +1078,7 @@
         }
         const bandItems = items.filter(i => i.y >= Math.min(low, high) - 1 && i.y <= Math.max(low, high) + 1);
         const rowItems = items.filter(i => Math.abs(i.y - r.y) <= 4);
-        const firstColX = cols.mb1?.x || cols.n1b2?.x || 235;
+        const firstColX = cols.mb1?.x || cols.n1b4?.x || 235;
         const discParts = bandItems
           .filter(i => i.x >= 35 && i.x <= Math.max(190, firstColX - 25))
           .sort((a, b) => Math.abs(a.y - b.y) > 2 ? (b.y - a.y) : (a.x - b.x))
@@ -1082,15 +1088,18 @@
         let n1b1 = cols.n1b1 ? valueIn(rowItems, cols.n1b1.left, cols.n1b1.right) : null;
         let mb1 = cols.mb1 ? valueIn(rowItems, cols.mb1.left, cols.mb1.right) : null;
         let n1b2 = cols.n1b2 ? valueIn(rowItems, cols.n1b2.left, cols.n1b2.right) : null;
+        let n1b4 = cols.n1b4 ? valueIn(rowItems, cols.n1b4.left, cols.n1b4.right) : null;
+        let mtf1 = cols.mtf1 ? valueIn(rowItems, cols.mtf1.left, cols.mtf1.right) : null;
+        let mtf2 = cols.mtf2 ? valueIn(rowItems, cols.mtf2.left, cols.mtf2.right) : null;
         const rf = statusIn(rowItems);
         const faltas = faltasIn(rowItems);
-        rows.push({ n: r.n, disciplina, n1b1, mb1, n1b2, faltas, rf });
+        rows.push({ n: r.n, disciplina, n1b1, mb1, n1b2, n1b4, mtf1, mtf2, mtfDisponivel: cols.mtfDisponivel, msfDisponivel: cols.msfDisponivel, faltas, rf });
       }
       return rows;
     }
     async function extrairAlunos(file) {
       const buffer = await file.arrayBuffer(); const pdf = await pdfjsLib.getDocument({ data: buffer }).promise; const alunos = [];
-      for (let p = 1; p <= pdf.numPages; p++) { const page = await pdf.getPage(p); const textContent = await page.getTextContent(); const items = makeItems(textContent); const fullText = items.map(i => i.str).join(' '); if (!/ESTUDANTE/i.test(fullText) || !/TURMA/i.test(fullText)) continue; const header = getHeader(items, fullText); const rows = parseRows(items); if (rows.length) alunos.push({ ...header, rows, pagina: p }); }
+      for (let p = 1; p <= pdf.numPages; p++) { const page = await pdf.getPage(p); const textContent = await page.getTextContent(); const items = makeItems(textContent); const fullText = items.map(i => i.str).join(' '); if (!/ESTUDANTE/i.test(fullText) || !/TURMA/i.test(fullText)) continue; const header = getHeader(items, fullText); const rows = parseRows(items); if (rows.length) { alunos.push({ ...header, rows, pagina: p, mtfDisponivel: Boolean(rows[0].mtfDisponivel), msfDisponivel: Boolean(rows[0].msfDisponivel) }); } }
       return alunos;
     }
     function alunoSemNenhumaNota(a) {
@@ -1099,17 +1108,17 @@
       // na lista de "Alunos sem lançamento de notas" e não no detalhamento principal.
       const linhas = (a.rows || []);
       if (!linhas.length) return false;
-      return !linhas.some(r => r.n1b1 !== null || r.mb1 !== null || r.n1b2 !== null);
+      return !linhas.some(r => r.n1b1 !== null || r.mb1 !== null || r.n1b2 !== null || r.n1b4 !== null);
     }
 
     function alunoSemNotaValidaOuZero(a) {
       // Identifica alunos sem nota válida: todos os componentes estão sem lançamento
-      // ou possuem apenas nota 0 nas colunas lidas (N1 1ºB, 1ªMB e N1 2ºB).
+      // ou possuem apenas nota 0 nas notas disponíveis, incluindo a N1 do 4º bimestre.
       const linhas = (a.rows || []).filter(r => !ADMIN_CODES.includes(norm(r.rf)));
       const base = linhas.length ? linhas : (a.rows || []);
       if (!base.length) return false;
       return !base.some(r => {
-        const notas = [r.n1b1, r.mb1, r.n1b2].filter(v => v !== null);
+        const notas = [r.n1b1, r.mb1, r.n1b2, r.n1b4].filter(v => v !== null);
         return notas.some(v => Number(v) > 0);
       });
     }
@@ -1121,9 +1130,8 @@
     }
 
     function totalFaltasAluno(a) {
-      return (a.rows || [])
-        .filter(r => !ADMIN_CODES.includes(norm(r.rf)))
-        .reduce((total, r) => total + Number(r.faltas || 0), 0);
+      // O ranking soma todas as faltas registradas no boletim, inclusive em componentes com situação administrativa.
+      return (a.rows || []).reduce((total, r) => total + Number(r.faltas || 0), 0);
     }
 
     function montarRankingFaltas(dados) {
@@ -1137,41 +1145,72 @@
       const limiteFaltas = LIMITE_FALTAS_ATENCAO;
       const mediaMinima = MEDIA_MINIMA_APROVACAO;
       alunosIgnorados = alunos.filter(alunoSemNenhumaNota).map(a => ({ ...a }));
-      alunosSemNotaValida = alunos
-        .filter(alunoSemNotaValidaOuZero)
+      alunosSemNotaValida = alunos.filter(alunoSemNotaValidaOuZero)
         .map(a => ({ aluno: a.aluno, turma: a.turma, pagina: a.pagina, motivo: motivoSemNotaValida(a) }));
       const alunosConsiderados = alunos.filter(a => !alunoSemNenhumaNota(a));
       return alunosConsiderados.map(a => {
         const ativos = a.rows.filter(r => !ADMIN_CODES.includes(norm(r.rf)));
         const admins = a.rows.filter(r => ADMIN_CODES.includes(norm(r.rf)));
-        const sem1mb = ativos.filter(r => r.mb1 === null).map(r => nomeComponente(r.disciplina));
-        const semN1b2 = ativos.filter(r => r.n1b2 === null).map(r => nomeComponente(r.disciplina));
+        const semN1b4 = ativos.filter(r => r.n1b4 === null).map(r => nomeComponente(r.disciplina));
         const abaixo6 = [];
-        const faltasAltas = ativos.filter(r => Number(r.faltas || 0) >= limiteFaltas).map(r => ({ disciplina: nomeComponente(r.disciplina), faltas: Number(r.faltas || 0) }));
+        const faltasAltas = ativos.filter(r => Number(r.faltas || 0) >= limiteFaltas)
+          .map(r => ({ disciplina: nomeComponente(r.disciplina), faltas: Number(r.faltas || 0) }));
         ativos.forEach(r => {
-          const comp = nomeComponente(r.disciplina);
-          // A classificação abaixo da média usa somente a 1ªMB do 1º bimestre.
-          // A N1 do 2º bimestre é acompanhada separadamente como referência atual.
-          const notaBase = r.mb1;
-          if (notaBase !== null && notaBase < mediaMinima) abaixo6.push({ disciplina: comp, nota: notaBase });
+          if (r.n1b4 !== null && r.n1b4 < mediaMinima) abaixo6.push({ disciplina: nomeComponente(r.disciplina), nota: r.n1b4 });
         });
-        const lanc1mb = ativos.filter(r => r.mb1 !== null).length;
-        const lancN1b2 = ativos.filter(r => r.n1b2 !== null).length;
+        const lancN1b4 = ativos.filter(r => r.n1b4 !== null).length;
         const totalComp = ativos.length;
-        const bothMissing = ativos.filter(r => r.mb1 === null && r.n1b2 === null).map(r => nomeComponente(r.disciplina));
         let situacao = 'REGULAR';
         if (!totalComp) situacao = 'ADMIN';
-        else if (bothMissing.length || (sem1mb.length && semN1b2.length)) situacao = 'CRITICO';
-        else if (sem1mb.length || semN1b2.length) situacao = 'ATENCAO';
-        let obs = [];
+        else if (lancN1b4 === 0) situacao = 'CRITICO';
+        else if (semN1b4.length) situacao = 'ATENCAO';
+        const obs = [];
         if (situacao === 'ADMIN') obs.push('Aluno sem componente ativo para análise ou apenas com situação administrativa.');
-        if (sem1mb.length) obs.push(`${sem1mb.length} disciplina(s) sem 1ªMB.`);
-        if (semN1b2.length) obs.push(`${semN1b2.length} disciplina(s) sem N1 2ºB.`);
-        if (abaixo6.length) obs.push(`${abaixo6.length} nota(s) abaixo da média mínima.`);
+        if (semN1b4.length) obs.push(`${semN1b4.length} disciplina(s) sem N1 do 4º bimestre.`);
+        if (abaixo6.length) obs.push(`${abaixo6.length} nota(s) N1 abaixo da média mínima.`);
         if (faltasAltas.length) obs.push(`Componentes com faltas acima do limite: ${faltasAltas.map(f => `${f.disciplina} (${f.faltas})`).join('; ')}.`);
-        if (!obs.length) obs.push('1ªMB e N1 do 2º bimestre lançadas nos componentes ativos, sem nota abaixo da média mínima.');
-        return { ...a, ativos, admins, totalComp, lanc1mb, lancN1b2, sem1mb, semN1b2, abaixo6, faltasAltas, bothMissing, situacao, obs: obs.join(' ') };
+        if (!obs.length) obs.push('N1 do 4º bimestre lançada nos componentes ativos, sem nota abaixo de 6,0.');
+        return { ...a, ativos, admins, totalComp, lancN1b4, semN1b4, abaixo6, faltasAltas, situacao, obs: obs.join(' ') };
       });
+    }
+
+    function analisarMediasTerceiroTrimestre(alunos) {
+      const todasLinhas = (alunos || []).flatMap(a => (a.rows || []).map(r => ({ ...r, aluno: a.aluno })));
+      const mtfDisponivel = todasLinhas.some(r => r.mtfDisponivel);
+      const msfDisponivel = todasLinhas.some(r => r.msfDisponivel);
+      if (!mtfDisponivel) return { mtfDisponivel: false, msfDisponivel, abaixo: [], incompletas: [], calculadas: 0 };
+      const abaixo = [], incompletas = [];
+      let calculadas = 0;
+      todasLinhas.forEach(r => {
+        if (ADMIN_CODES.includes(norm(r.rf))) return;
+        const nome = nomeComponente(r.disciplina);
+        if (r.mtf1 !== null && r.mtf2 !== null) {
+          const media = (Number(r.mtf1) + Number(r.mtf2)) / 2;
+          calculadas++;
+          if (media < MEDIA_MINIMA_APROVACAO) abaixo.push({ aluno: r.aluno, disciplina: nome, mtf1: r.mtf1, mtf2: r.mtf2, media });
+        } else {
+          incompletas.push({ aluno: r.aluno, disciplina: nome, mtf1: r.mtf1, mtf2: r.mtf2 });
+        }
+      });
+      return { mtfDisponivel, msfDisponivel, abaixo, incompletas, calculadas };
+    }
+
+    function renderMediasTerceiroTrimestre(analise) {
+      const alunosAbaixo = new Set(analise.abaixo.map(r => norm(r.aluno)));
+      $('totalMedia3Abaixo').textContent = alunosAbaixo.size;
+      $('totalComp3Abaixo').textContent = analise.abaixo.length;
+      $('totalMedia3Calculadas').textContent = analise.calculadas;
+      $('totalMedia3Incompletas').textContent = analise.incompletas.length;
+      if (!analise.mtfDisponivel) {
+        $('avisoMediaTrimestre').innerHTML = `<p class="badge atencao">Este boletim não contém as colunas 1ªMTF e 2ªMTF exigidas para calcular a média do 3º trimestre. ${analise.msfDisponivel ? 'Ele apresenta 1ªMSF e 2ªMSF (médias semestrais), que não substituem as MTF.' : ''} Não é possível informar carências de média do 3º trimestre com este arquivo.</p>`;
+        $('listaMediaTrimestre').innerHTML = '';
+        return;
+      }
+      $('avisoMediaTrimestre').innerHTML = '';
+      const linhas = [...analise.abaixo.map(r => ({ ...r, status: 'RECUPERAÇÃO' })), ...analise.incompletas.map(r => ({ ...r, media: null, status: 'MÉDIA INCOMPLETA' }))];
+      $('listaMediaTrimestre').innerHTML = linhas.length
+        ? `<table><thead><tr><th>Aluno</th><th>Disciplina</th><th>1ªMTF</th><th>2ªMTF</th><th>Média parcial</th><th>Acompanhamento</th></tr></thead><tbody>${linhas.map(r => `<tr><td><strong>${r.aluno}</strong></td><td>${r.disciplina}</td><td>${fmtNota(r.mtf1)}</td><td>${fmtNota(r.mtf2)}</td><td>${fmtNota(r.media)}</td><td>${r.status}</td></tr>`).join('')}</tbody></table>`
+        : '<p><span class="badge ok">Nenhuma média abaixo de 6,0 ou incompleta identificada.</span></p>';
     }
     function badgeClass(s) { return s === 'CRITICO' ? 'risco' : s === 'ATENCAO' ? 'atencao' : s === 'ADMIN' ? 'admin' : 'ok' }
     function statusNome(s) { return s === 'CRITICO' ? 'CRÍTICO' : s === 'ATENCAO' ? 'ATENÇÃO' : s === 'ADMIN' ? 'ADMIN.' : 'REGULAR' }
@@ -1200,12 +1239,12 @@
     function listaFaltasPdf(lista) {
       return (lista || []).map(r => `${r.disciplina} (${r.faltas})`).join('; ') || '-';
     }
-    function passaFiltro(d) { switch (filtroAtual) { case 'CRITICO': return d.situacao === 'CRITICO'; case 'ATENCAO': return d.situacao === 'ATENCAO'; case 'REGULAR': return d.situacao === 'REGULAR'; case 'SEM_1MB': return d.sem1mb.length; case 'SEM_N1_2B': return d.semN1b2.length; case 'ABAIXO_6': return d.abaixo6 && d.abaixo6.length; case 'FALTAS': return d.faltasAltas && d.faltasAltas.length; case 'ADMIN': return d.situacao === 'ADMIN' || d.admins.length; default: return true } }
+    function passaFiltro(d) { switch (filtroAtual) { case 'CRITICO': return d.situacao === 'CRITICO'; case 'ATENCAO': return d.situacao === 'ATENCAO'; case 'REGULAR': return d.situacao === 'REGULAR'; case 'SEM_1MB': return d.sem1mb.length; case 'SEM_N1_4B': return d.semN1b4.length; case 'ABAIXO_6': return d.abaixo6 && d.abaixo6.length; case 'FALTAS': return d.faltasAltas && d.faltasAltas.length; case 'ADMIN': return d.situacao === 'ADMIN' || d.admins.length; default: return true } }
 
     function calcularMediaAluno(d) {
       const notas = [];
       (d.ativos || []).forEach(r => {
-        const notaBase = r.mb1;
+        const notaBase = r.n1b4;
         if (notaBase !== null && !Number.isNaN(Number(notaBase))) notas.push(Number(notaBase));
       });
       if (!notas.length) return null;
@@ -1256,7 +1295,7 @@
       const mapa = new Map();
       analisados.forEach(d => {
         (d.ativos || []).forEach(r => {
-          const notaBase = r.mb1;
+          const notaBase = r.n1b4;
           if (notaBase === null || Number.isNaN(Number(notaBase))) return;
           const nome = nomeComponente(r.disciplina);
           if (!nome) return;
@@ -1281,20 +1320,27 @@
       dadosGerados = dados; renderFilterButtons();
       const turma = dados.find(d => d.turma && d.turma !== 'Turma não identificada')?.turma || 'Turma não identificada'; const tipo = dados.find(d => d.tipo)?.tipo || 'EJA';
       $('turmaTitulo').textContent = `TURMA: ${turma}`; $('tipoTitulo').textContent = `Tipo identificado: ${tipo}`;
-      const ativos = dados.filter(d => d.situacao !== 'ADMIN'); const totalCells = ativos.reduce((s, d) => s + d.totalComp * 2, 0); const filled = ativos.reduce((s, d) => s + d.lanc1mb + d.lancN1b2, 0); const pct = totalCells ? Math.round((filled / totalCells) * 100) : 0;
-      $('totalAlunos').textContent = dados.length + alunosIgnorados.length; $('totalAtivos').textContent = ativos.length; $('totalCriticos').textContent = dados.filter(d => d.situacao === 'CRITICO').length; $('totalAtencao').textContent = dados.filter(d => d.situacao === 'ATENCAO').length; $('totalRegulares').textContent = dados.filter(d => d.situacao === 'REGULAR').length; $('totalAbaixo6').textContent = dados.filter(d => d.abaixo6 && d.abaixo6.length).length; $('totalFaltasRisco').textContent = dados.filter(d => d.faltasAltas && d.faltasAltas.length).length; $('totalSem1MB').textContent = dados.filter(d => d.sem1mb.length).length; $('totalSemN1B2').textContent = dados.filter(d => d.semN1b2.length).length;
-      const pend = dados.filter(d => d.sem1mb.length || d.semN1b2.length);
-      $('listaPendencias').innerHTML = pend.length ? `<p><strong>${pend.length} aluno(s) com pendência de notas</strong></p><table><thead><tr><th>Aluno</th><th>Situação</th><th>Sem 1ªMB</th><th>Sem N1 2ºB</th></tr></thead><tbody>${pend.map(d => `<tr><td><strong>${d.aluno}</strong></td><td><span class="badge ${badgeClass(d.situacao)}">${statusNome(d.situacao)}</span></td><td class="disciplinas">${listaComponentes(d.sem1mb)}</td><td class="disciplinas">${listaComponentes(d.semN1b2)}</td></tr>`).join('')}</tbody></table>` : '<p><span class="badge ok">Nenhuma pendência de 1ªMB ou N1 2ºB encontrada.</span></p>';
+      const ativos = dados.filter(d => d.situacao !== 'ADMIN');
+      $('totalAlunos').textContent = dados.length + alunosIgnorados.length; $('totalAtivos').textContent = ativos.length; $('totalCriticos').textContent = dados.filter(d => d.situacao === 'CRITICO').length; $('totalAtencao').textContent = dados.filter(d => d.situacao === 'ATENCAO').length; $('totalRegulares').textContent = dados.filter(d => d.situacao === 'REGULAR').length; $('totalAbaixo6').textContent = dados.filter(d => d.abaixo6 && d.abaixo6.length).length; $('totalFaltasRisco').textContent = dados.filter(d => d.faltasAltas && d.faltasAltas.length).length; $('totalSemN1B4').textContent = dados.filter(d => d.semN1b4.length).length;
+      const pend = dados.filter(d => d.semN1b4.length);
+      $('listaPendencias').innerHTML = pend.length ? `<p><strong>${pend.length} aluno(s) com pendência de notas</strong></p><table><thead><tr><th>Aluno</th><th>Situação</th><th>Sem N1 4ºB</th></tr></thead><tbody>${pend.map(d => `<tr><td><strong>${d.aluno}</strong></td><td><span class="badge ${badgeClass(d.situacao)}">${statusNome(d.situacao)}</span></td><td class="disciplinas">${listaComponentes(d.semN1b4)}</td></tr>`).join('')}</tbody></table>` : '<p><span class="badge ok">Nenhuma pendência de N1 do 4º bimestre encontrada.</span></p>';
       if ($('listaSemNotaValida')) {
         $('listaSemNotaValida').innerHTML = alunosSemNotaValida.length
           ? `<p><strong>${alunosSemNotaValida.length} aluno(s) sem nota válida ou somente com zero</strong></p><table><thead><tr><th>Aluno</th><th>Situação identificada</th></tr></thead><tbody>${alunosSemNotaValida.map(a => `<tr><td><strong>${a.aluno}</strong></td><td>${a.motivo}</td></tr>`).join('')}</tbody></table>`
           : '<p><span class="badge ok">Nenhum aluno sem nota válida ou somente com zero foi identificado.</span></p>';
       }
       const abaixoMedia = dados.filter(d => d.situacao !== 'ADMIN' && d.abaixo6.length);
+      const componentesAtivos = ativos.reduce((total, d) => total + d.totalComp, 0);
+      const n1Lancadas = ativos.reduce((total, d) => total + d.lancN1b4, 0);
+      if ($('avisoN1B4')) {
+        $('avisoN1B4').innerHTML = n1Lancadas === 0
+          ? `<p class="badge atencao">O boletim não apresenta lançamentos da N1 do 4º bimestre: 0 de ${componentesAtivos} componentes ativos com nota. Assim, não há notas abaixo de 6,0 a identificar; os alunos com N1 pendente estão listados acima.</p>`
+          : `<p class="badge ${abaixoMedia.length ? 'risco' : 'ok'}">${n1Lancadas} de ${componentesAtivos} componentes ativos têm N1 lançada. ${abaixoMedia.length} aluno(s) têm ao menos uma nota abaixo de 6,0.</p>`;
+      }
       if ($('listaAbaixoMedia')) {
         $('listaAbaixoMedia').innerHTML = abaixoMedia.length
-          ? `<table><thead><tr><th>Aluno</th><th>Componentes com 1ªMB abaixo da média</th></tr></thead><tbody>${abaixoMedia.map(d => `<tr><td><strong>${d.aluno}</strong></td><td class="disciplinas">${listaAbaixo6(d.abaixo6)}</td></tr>`).join('')}</tbody></table>`
-          : '<p><span class="badge ok">Nenhum aluno com 1ªMB abaixo da média mínima.</span></p>';
+          ? `<table><thead><tr><th>Aluno</th><th>Componentes com N1 do 4º bimestre abaixo de 6,0</th></tr></thead><tbody>${abaixoMedia.map(d => `<tr><td><strong>${d.aluno}</strong></td><td class="disciplinas">${listaAbaixo6(d.abaixo6)}</td></tr>`).join('')}</tbody></table>`
+          : '<p><span class="badge ok">Nenhum aluno com N1 do 4º bimestre abaixo de 6,0.</span></p>';
       }
       const rankingFaltas = montarRankingFaltas(dados);
       if ($('listaRankingFaltas')) {
@@ -1302,9 +1348,10 @@
           ? `<table><thead><tr><th>Posição</th><th>Aluno</th><th>Total de faltas</th></tr></thead><tbody>${rankingFaltas.map((a, i) => `<tr><td>${i + 1}º</td><td><strong>${a.aluno}</strong></td><td>${a.faltas}</td></tr>`).join('')}</tbody></table>`
           : '<p><span class="badge atencao">Nenhum aluno encontrado para compor o ranking.</span></p>';
       }
+      renderMediasTerceiroTrimestre(analisarMediasTerceiroTrimestre([...dados, ...alunosIgnorados]));
       atualizarIndicadoresPedagogicos(dados);
       const tbody = $('tbody'); tbody.innerHTML = '';
-      dados.filter(passaFiltro).forEach(d => { const cls = badgeClass(d.situacao); const sit = statusNome(d.situacao); const tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${d.aluno}</strong><div class="small">${d.totalComp} componente(s) ativo(s) lido(s)</div></td><td><span class="badge ${cls}">${sit}</span></td><td><span class="badge ${d.sem1mb.length ? 'atencao' : 'ok'}">${d.lanc1mb}/${d.totalComp}</span></td><td><span class="badge ${d.semN1b2.length ? 'atencao' : 'ok'}">${d.lancN1b2}/${d.totalComp}</span></td><td class="disciplinas">${listaAbaixo6(d.abaixo6)}</td><td class="disciplinas">${listaFaltas(d.faltasAltas)}</td><td>${d.obs}</td>`; tbody.appendChild(tr); });
+      dados.filter(passaFiltro).forEach(d => { const cls = badgeClass(d.situacao); const sit = statusNome(d.situacao); const tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${d.aluno}</strong><div class="small">${d.totalComp} componente(s) ativo(s) lido(s)</div></td><td><span class="badge ${cls}">${sit}</span></td><td><span class="badge ${d.semN1b4.length ? 'atencao' : 'ok'}">${d.lancN1b4}/${d.totalComp}</span></td><td class="disciplinas">${listaAbaixo6(d.abaixo6)}</td><td class="disciplinas">${listaFaltas(d.faltasAltas)}</td><td>${d.obs}</td>`; tbody.appendChild(tr); });
       $('results').classList.remove('hidden');
     }
     $('filtro').addEventListener('change', e => { filtroAtual = e.target.value; if (dadosGerados.length) render(dadosGerados) });
@@ -1486,23 +1533,34 @@
       });
       y = doc.lastAutoTable.finalY + 7;
 
-      // Alunos com 1ªMB abaixo da média
-      y = titulo('Alunos com 1ªMB Abaixo da Média', y, [146, 64, 14]);
+      // Alunos com N1 do 4º bimestre abaixo da média
+      y = titulo('Alunos com N1 do 4º Bimestre Abaixo de 6,0', y, [146, 64, 14]);
       const abaixoMediaPdf = ativos.filter(d => d.abaixo6 && d.abaixo6.length);
       doc.autoTable({
         ...tableTheme([146, 64, 14]),
         startY: y,
-        head: [['Aluno', 'Componentes com 1ªMB abaixo da média']],
-        body: abaixoMediaPdf.length ? abaixoMediaPdf.map(d => [safeText(d.aluno), listaAbaixo6Pdf(d.abaixo6)]) : [['Nenhum aluno com 1ªMB abaixo da média mínima.', '-']],
+        head: [['Aluno', 'Componentes com N1 do 4º bimestre abaixo de 6,0']],
+        body: abaixoMediaPdf.length ? abaixoMediaPdf.map(d => [safeText(d.aluno), listaAbaixo6Pdf(d.abaixo6)]) : [['Nenhum aluno com N1 do 4º bimestre abaixo de 6,0.', '-']],
         columnStyles: { 0: { cellWidth: 75 }, 1: { cellWidth: 'auto' } }
       });
       y = doc.lastAutoTable.finalY + 7;
 
-      // Disciplinas com maior dificuldade, calculadas somente com a 1ªMB
+      // Análise de recuperação no 3º trimestre pela média das duas MTF
+      const analiseTrimestre = analisarMediasTerceiroTrimestre([...dadosGerados, ...alunosIgnorados]);
+      y = titulo('Recuperação no 3º Trimestre', y, [185, 28, 28]);
+      if (!analiseTrimestre.mtfDisponivel) {
+        doc.autoTable({ ...tableTheme([185, 28, 28]), startY: y, head: [['Critério / disponibilidade']], body: [[analiseTrimestre.msfDisponivel ? 'Não calculável: o boletim contém 1ªMSF e 2ªMSF (médias semestrais), mas não contém 1ªMTF e 2ªMTF.' : 'Não calculável: o boletim não contém as colunas 1ªMTF e 2ªMTF.']] });
+      } else {
+        const linhasTrimestre = [...analiseTrimestre.abaixo.map(r => ({ ...r, estado: 'RECUPERAÇÃO' })), ...analiseTrimestre.incompletas.map(r => ({ ...r, media: null, estado: 'MÉDIA INCOMPLETA' }))];
+        doc.autoTable({ ...tableTheme([185, 28, 28]), startY: y, head: [['Aluno', 'Disciplina', '1ªMTF', '2ªMTF', 'Média parcial', 'Acompanhamento']], body: linhasTrimestre.length ? linhasTrimestre.map(r => [safeText(r.aluno), safeText(r.disciplina), safeNota(r.mtf1), safeNota(r.mtf2), safeNota(r.media), r.estado]) : [['Nenhuma pendência identificada.', '-', '-', '-', '-', '-']] });
+      }
+      y = doc.lastAutoTable.finalY + 7;
+
+      // Disciplinas com maior dificuldade, calculadas com a N1 do 4º bimestre
       const mapa = new Map();
       ativos.forEach(d => {
         (d.ativos || []).forEach(r => {
-          const notaBase = r.mb1;
+          const notaBase = r.n1b4;
           if (notaBase === null || Number.isNaN(Number(notaBase))) return;
           const nome = nomeComponente(r.disciplina);
           if (!nome) return;
@@ -1526,21 +1584,19 @@
       y = doc.lastAutoTable.finalY + 7;
 
       // Carência de notas
-      const pend = dadosGerados.filter(d => (d.sem1mb && d.sem1mb.length) || (d.semN1b2 && d.semN1b2.length));
+      const pend = dadosGerados.filter(d => d.semN1b4 && d.semN1b4.length);
       y = titulo('Alunos com Carência de Notas', y, [146, 64, 14]);
       doc.autoTable({
         ...tableTheme([146, 64, 14]),
         startY: y,
-        head: [['Aluno', 'Situação', '1ªMB', 'N1 2ºB', 'Sem 1ªMB', 'Sem N1 2ºB']],
+        head: [['Aluno', 'Situação', 'N1 4ºB lançadas', 'Componentes sem N1 4ºB']],
         body: pend.length ? pend.map(d => [
           safeText(d.aluno),
           statusNome(d.situacao),
-          `${d.lanc1mb}/${d.totalComp}`,
-          `${d.lancN1b2}/${d.totalComp}`,
-          listaComponentesPdf(d.sem1mb),
-          listaComponentesPdf(d.semN1b2)
-        ]) : [['Nenhuma pendência de 1ªMB ou N1 2ºB encontrada.', '-', '-', '-', '-', '-']],
-        columnStyles: { 0: { cellWidth: 55 }, 1: { cellWidth: 22, halign: 'center' }, 2: { cellWidth: 18, halign: 'center' }, 3: { cellWidth: 20, halign: 'center' }, 4: { cellWidth: 82 }, 5: { cellWidth: 'auto' } }
+          `${d.lancN1b4}/${d.totalComp}`,
+          listaComponentesPdf(d.semN1b4)
+        ]) : [['Nenhuma pendência de N1 do 4º bimestre encontrada.', '-', '-', '-']],
+        columnStyles: { 0: { cellWidth: 60 }, 1: { cellWidth: 28, halign: 'center' }, 2: { cellWidth: 35, halign: 'center' }, 3: { cellWidth: 'auto' } }
       });
       y = doc.lastAutoTable.finalY + 7;
 
@@ -1549,12 +1605,11 @@
       doc.autoTable({
         ...tableTheme([15, 47, 102]),
         startY: y,
-        head: [['Aluno', 'Situação', '1ªMB', 'N1 2ºB', 'Média', 'Faltas', 'Disciplinas em risco', 'Faltas em risco', 'Observação']],
+        head: [['Aluno', 'Situação', 'N1 4ºB', 'Média N1 4ºB', 'Faltas', 'Disciplinas abaixo de 6', 'Faltas em risco', 'Observação']],
         body: dadosGerados.map(d => [
           safeText(d.aluno),
           statusNome(d.situacao),
-          `${d.lanc1mb}/${d.totalComp}`,
-          `${d.lancN1b2}/${d.totalComp}`,
+          `${d.lancN1b4}/${d.totalComp}`,
           safeNota(calcularMediaAluno(d)),
           String(sumFaltas(d)),
           listaAbaixo6Pdf(d.abaixo6),
@@ -1563,7 +1618,7 @@
         ]),
         styles: { ...tableTheme().styles, fontSize: 6.3, cellPadding: 1.2 },
         headStyles: { fillColor: [15, 47, 102], textColor: 255, fontStyle: 'bold', halign: 'center' },
-        columnStyles: { 0: { cellWidth: 42 }, 1: { cellWidth: 18, halign: 'center' }, 2: { cellWidth: 14, halign: 'center' }, 3: { cellWidth: 16, halign: 'center' }, 4: { cellWidth: 14, halign: 'center' }, 5: { cellWidth: 15, halign: 'center' }, 6: { cellWidth: 55 }, 7: { cellWidth: 50 }, 8: { cellWidth: 'auto' } },
+        columnStyles: { 0: { cellWidth: 42 }, 1: { cellWidth: 18, halign: 'center' }, 2: { cellWidth: 18, halign: 'center' }, 3: { cellWidth: 22, halign: 'center' }, 4: { cellWidth: 15, halign: 'center' }, 5: { cellWidth: 48 }, 6: { cellWidth: 45 }, 7: { cellWidth: 'auto' } },
         didParseCell: function (data) {
           if (data.section === 'body' && data.column.index === 1) {
             const v = String(data.cell.raw || '');

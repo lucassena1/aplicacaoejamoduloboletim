@@ -1416,28 +1416,7 @@
       doc.text(`Relatório completo gerado em ${dataHora}. Média de aprovação: ${safeNota(mediaMinima)}.`, margem, y);
       y += 4;
 
-      const resumo = [
-        ['Total de alunos', dadosGerados.length + (alunosSemNotaValida || []).length],
-        ['Alunos analisados', dadosGerados.length],
-        ['Componentes ativos', ativos.reduce((s, d) => s + (d.totalComp || 0), 0)],
-        ['Críticos', dadosGerados.filter(d => d.situacao === 'CRITICO').length],
-        ['Atenção', dadosGerados.filter(d => d.situacao === 'ATENCAO').length],
-        ['Regulares', dadosGerados.filter(d => d.situacao === 'REGULAR').length],
-        ['Com nota abaixo da média', dadosGerados.filter(d => d.abaixo6 && d.abaixo6.length).length],
-        ['Com faltas em risco', dadosGerados.filter(d => d.faltasAltas && d.faltasAltas.length).length],
-        ['Sem 1ªMB', dadosGerados.filter(d => d.sem1mb && d.sem1mb.length).length],
-        ['Sem N1 2ºB', dadosGerados.filter(d => d.semN1b2 && d.semN1b2.length).length],
-        ['Sem nota válida / só zero', (alunosSemNotaValida || []).length]
-      ];
-      doc.autoTable({
-        ...tableTheme([15, 47, 102]),
-        startY: y,
-        head: [['Indicador', 'Quantidade']],
-        body: resumo,
-        columnStyles: { 0: { cellWidth: 70 }, 1: { cellWidth: 28, halign: 'center', fontStyle: 'bold' } },
-        styles: { ...tableTheme().styles, fontSize: 8.5, cellPadding: 2 }
-      });
-      y = doc.lastAutoTable.finalY + 8;
+      y += 7;
 
       // Indicadores pedagógicos
       const medias = ativos.map(d => ({ d, media: calcularMediaAluno(d) })).filter(x => x.media !== null);

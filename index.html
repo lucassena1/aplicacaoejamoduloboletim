@@ -878,7 +878,7 @@
         <section class="card destaque" id="relatorioAbaixoMedia">
           <div class="sectionTag">1º BIMESTRE</div>
           <h2>Alunos com 1ªMB abaixo da média</h2>
-          <p>Considera somente a média bimestral (1ªMB), comparada à média mínima configurada acima.</p>
+          <p>Considera somente a média bimestral (1ªMB), comparada à média de aprovação fixa de 6,0.</p>
           <div id="listaAbaixoMedia"></div>
         </section>
 
@@ -921,6 +921,12 @@
           <div id="tabelaDificuldades"></div>
         </section>
 
+        <section class="card" id="rankingFaltas">
+          <h2>Ranking de faltas</h2>
+          <p>Alunos ordenados da maior para a menor quantidade total de faltas registrada no boletim.</p>
+          <div id="listaRankingFaltas"></div>
+        </section>
+
         <section class="card">
           <h2>Detalhamento por aluno</h2>
           <table>
@@ -941,7 +947,7 @@
       </div>
       <section class="card exportBox">
         <h2>Baixar relatório final</h2>
-        <p>Baixe em PDF todas as informações geradas: carência de notas, alunos sem nota válida, resumo geral, indicadores pedagógicos, possível evasão, disciplinas com maior dificuldade, detalhamento, disciplinas em risco e faltas em risco.</p>
+        <p>Baixe em PDF todas as informações geradas: carência de notas, alunos sem nota válida, resumo geral, indicadores pedagógicos, possível evasão, disciplinas com maior dificuldade, ranking do total de faltas, detalhamento, disciplinas em risco e faltas em risco.</p>
         <div class="actions"><button id="btnPdf" class="btnPdf" type="button">Baixar dados gerados em PDF</button></div>
       </section>
     </section>
@@ -1114,10 +1120,23 @@
         : 'Todos os componentes estão sem nota válida: lançamentos em branco ou com nota 0.';
     }
 
+    function totalFaltasAluno(a) {
+      return (a.rows || [])
+        .filter(r => !ADMIN_CODES.includes(norm(r.rf)))
+        .reduce((total, r) => total + Number(r.faltas || 0), 0);
+    }
+
+    function montarRankingFaltas(dados) {
+      return [...(dados || []), ...(alunosIgnorados || [])]
+        .map(a => ({ aluno: a.aluno, faltas: totalFaltasAluno(a) }))
+        .filter(a => a.aluno)
+        .sort((a, b) => b.faltas - a.faltas || a.aluno.localeCompare(b.aluno, 'pt-BR'));
+    }
+
     function analisar(alunos) {
       const limiteFaltas = LIMITE_FALTAS_ATENCAO;
       const mediaMinima = MEDIA_MINIMA_APROVACAO;
-      alunosIgnorados = alunos.filter(alunoSemNenhumaNota).map(a => ({ aluno: a.aluno, turma: a.turma, pagina: a.pagina }));
+      alunosIgnorados = alunos.filter(alunoSemNenhumaNota).map(a => ({ ...a }));
       alunosSemNotaValida = alunos
         .filter(alunoSemNotaValidaOuZero)
         .map(a => ({ aluno: a.aluno, turma: a.turma, pagina: a.pagina, motivo: motivoSemNotaValida(a) }));
@@ -1276,6 +1295,12 @@
         $('listaAbaixoMedia').innerHTML = abaixoMedia.length
           ? `<table><thead><tr><th>Aluno</th><th>Componentes com 1ªMB abaixo da média</th></tr></thead><tbody>${abaixoMedia.map(d => `<tr><td><strong>${d.aluno}</strong></td><td class="disciplinas">${listaAbaixo6(d.abaixo6)}</td></tr>`).join('')}</tbody></table>`
           : '<p><span class="badge ok">Nenhum aluno com 1ªMB abaixo da média mínima.</span></p>';
+      }
+      const rankingFaltas = montarRankingFaltas(dados);
+      if ($('listaRankingFaltas')) {
+        $('listaRankingFaltas').innerHTML = rankingFaltas.length
+          ? `<table><thead><tr><th>Posição</th><th>Aluno</th><th>Total de faltas</th></tr></thead><tbody>${rankingFaltas.map((a, i) => `<tr><td>${i + 1}º</td><td><strong>${a.aluno}</strong></td><td>${a.faltas}</td></tr>`).join('')}</tbody></table>`
+          : '<p><span class="badge atencao">Nenhum aluno encontrado para compor o ranking.</span></p>';
       }
       atualizarIndicadoresPedagogicos(dados);
       const tbody = $('tbody'); tbody.innerHTML = '';
@@ -1441,6 +1466,17 @@
         ]],
         styles: { ...tableTheme().styles, fontSize: 9, halign: 'center', cellPadding: 3 },
         columnStyles: { 0: { cellWidth: 55 }, 1: { cellWidth: 55 }, 2: { cellWidth: 55 }, 3: { cellWidth: 55 } }
+      });
+      y = doc.lastAutoTable.finalY + 7;
+
+      y = titulo('Ranking de Faltas', y, [15, 47, 102]);
+      const rankingFaltasPdf = montarRankingFaltas(dadosGerados);
+      doc.autoTable({
+        ...tableTheme([15, 47, 102]),
+        startY: y,
+        head: [['Posição', 'Aluno', 'Total de faltas']],
+        body: rankingFaltasPdf.length ? rankingFaltasPdf.map((a, i) => [`${i + 1}º`, safeText(a.aluno), a.faltas]) : [['-', 'Nenhum aluno encontrado.', '-']],
+        columnStyles: { 0: { cellWidth: 22, halign: 'center' }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 35, halign: 'center' } }
       });
       y = doc.lastAutoTable.finalY + 7;
 
